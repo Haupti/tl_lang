@@ -1,0 +1,165 @@
+sealed class Token {
+  String show;
+  int row;
+  int col;
+  Token(this.row, this.col, this.show);
+}
+
+class T1BracesOpenToken implements Token {
+  @override
+  String show = "(";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T1BracesOpenToken(this.row, this.col);
+}
+
+class T2BracesOpenToken implements Token {
+  @override
+  String show = "[";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T2BracesOpenToken(this.row, this.col);
+}
+
+class T3BracesOpenToken implements Token {
+  @override
+  String show = "{";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T3BracesOpenToken(this.row, this.col);
+}
+
+class T1BracesCloseToken implements Token {
+  @override
+  String show = ")";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T1BracesCloseToken(this.row, this.col);
+}
+
+class T2BracesCloseToken implements Token {
+  @override
+  String show = "]";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T2BracesCloseToken(this.row, this.col);
+}
+
+class T3BracesCloseToken implements Token {
+  @override
+  String show = "}";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  T3BracesCloseToken(this.row, this.col);
+}
+
+class IntToken implements Token {
+  @override
+  String show;
+
+  int value;
+  @override
+  int col;
+
+  @override
+  int row;
+  IntToken(this.value, this.row, this.col) : show = "int:$value";
+}
+
+class FloatToken implements Token {
+  @override
+  String show;
+
+  double value;
+
+  @override
+  int col;
+
+  @override
+  int row;
+  FloatToken(this.value, this.row, this.col) : show = "float:$value";
+}
+
+class StringToken implements Token {
+  @override
+  String show;
+
+  String value;
+
+  @override
+  int col;
+
+  @override
+  int row;
+  StringToken(this.value, this.row, this.col) : show = "str:$value";
+}
+
+class BoolToken implements Token {
+  @override
+  String show;
+
+  bool value;
+
+  @override
+  int col;
+
+  @override
+  int row;
+  BoolToken(this.value, this.row, this.col) : show = "bool:$value";
+}
+
+class NameToken implements Token {
+  @override
+  String show;
+
+  String value;
+
+  @override
+  int col;
+
+  @override
+  int row;
+  NameToken(this.value, this.row, this.col) : show = "name:$value";
+}
+
+class ObjectAccessToken implements Token {
+  @override
+  String show;
+
+  String objectName;
+  String accessedName;
+  List<String> subaccessedNames;
+
+  @override
+  int col;
+
+  @override
+  int row;
+  ObjectAccessToken(this.objectName, this.accessedName, this.subaccessedNames,
+      this.row, this.col)
+      : show = "access:$objectName.$accessedName.${subaccessedNames.join(".")}";
+}
