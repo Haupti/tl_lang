@@ -1,13 +1,5 @@
+import 'package:tll/parse/tokenize/lexer_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
-
-class LexerException implements Exception {
-  final String message;
-  final int row;
-  final int col;
-  LexerException(this.message, this.row, this.col);
-  @override
-  String toString() => "ERROR at ($row|$col): $message.";
-}
 
 class Lexer {
   static List<Token> tokenize(String code) {
@@ -47,6 +39,9 @@ class Lexer {
         }
       } else if (_isValidName(currentWord)) {
         tokens.add(NameToken(currentWord, row, wordStartCol ?? col));
+      } else {
+        throw LexerException(
+            "contains invalid character for name", row, wordStartCol ?? col);
       }
       currentWord = "";
       wordStartCol = null;

@@ -1,55 +1,32 @@
 import 'package:tll/parse/tokenize/lexer.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
-sealed class Tree {
-  String name;
-  int row;
-  int col;
-  Tree(this.name, this.row, this.col);
-}
-
-class Leaf implements Tree {
-  @override
-  int col;
-
-  @override
-  String name;
-
-  @override
-  int row;
-
-  Leaf(this.name, this.row, this.col);
-}
-
-class Node implements Tree {
-  @override
-  int col;
-
-  @override
-  String name;
-
-  @override
-  int row;
-
-  List<Tree> arguments;
-  Node(this.name, this.arguments, this.row, this.col);
-}
-
 class Collector {
-  static List<Token> _findInnerTokens(List<Token> expressionTokens){
-        List<Token> trimmedExpressionTokens = expressionTokens.sublist(1);
-        trimmedExpressionTokens.removeLast();
-        return trimmedExpressionTokens;
+  static List<Token> _findInnerTokens(List<Token> expressionTokens) {
+    List<Token> trimmedExpressionTokens = expressionTokens.sublist(1);
+    trimmedExpressionTokens.removeLast();
+    return trimmedExpressionTokens;
   }
-  static Tree _toTree(List<Token> tokens) {
+
+  static Expression _toExpression(List<Token> tokens) {
     List<Token> innerTokens = _findInnerTokens(tokens);
 
+    if (innerTokens.isEmpty) {
+      throw Exception("empty expressions are not allowed"); // TODO more info
+    }
+    Token token = innerTokens[0];
+    Expression base;
     for (int i = 0; i < innerTokens.length; i++) {
-      // TODO
+      if (token is ObjectAccessToken) {
+        base = Node();
+      }
+      if (token is NameToken) {
+        base = Node();
+      }
     }
   }
 
-  static (Tree?, List<Token>) _findFirstExpressionTreeAndRest(
+  static (Expression?, List<Token>) _findFirstExpressionAndRest(
       List<Token> tokens) {
     if (tokens.isEmpty) {
       return (null, []);
@@ -66,7 +43,7 @@ class Collector {
       throw Exception("expected a bracket here");
     }
 
-    Tree? tree;
+    Expression? tree;
     int bracketCounter = 1;
     List<Token> expressionTokens = [];
     int i = 0;
@@ -101,7 +78,7 @@ class Collector {
         default:
       }
       if (bracketCounter == 0) {
-        tree = _toTree(expressionTokens);
+        tree = _toExpression(expressionTokens);
         expressionTokens = [];
         break;
       }
@@ -110,11 +87,11 @@ class Collector {
     return (tree, rest);
   }
 
-  static List<Tree> _findExpressionTrees(List<Token> tokens) {
+  static List<Expression> _findExpressions(List<Token> tokens) {
     if (tokens.isEmpty) {
       return [];
     }
-    var (tree, rest) = _findFirstExpressionTreeAndRest(tokens);
+    var (tree, rest) = _findFirstExpressionAndRest(tokens);
 
     if (tree == null) {
       // TODO add info where the initial bracket was and which bracket
@@ -124,16 +101,16 @@ class Collector {
     // recursive
     // recursive stop
     if (rest.isNotEmpty) {
-      List<Tree> trees = [tree];
-      trees.addAll(_findExpressionTrees(rest));
+      List<Expression> trees = [tree];
+      trees.addAll(_findExpressions(rest));
       return trees;
     } else {
       return [tree];
     }
   }
 
-  static List<Tree> findTrees(String code) {
+  static List<Expression> findExpressions(String code) {
     List<Token> tokens = Lexer.tokenize(code);
-    return _findExpressionTrees(tokens);
+    return _findExpressions(tokens);
   }
 }
