@@ -14,6 +14,8 @@ class Lexer {
     int row = 0;
     int col = 0;
     bool isInString = false;
+    int? wordStartCol;
+    int? stringStartRow;
     String currentWord = "";
 
     List<Token> tokens = [];
@@ -22,15 +24,17 @@ class Lexer {
       if (currentWord == "") {
         return;
       } else if (_containsOnly(currentWord, "0123456789")) {
-        tokens.add(IntToken(int.parse(currentWord), row, col));
+        tokens.add(IntToken(int.parse(currentWord), row, wordStartCol ?? col));
       } else if (_containsOnly(currentWord, "0123456789.")) {
-        tokens.add(FloatToken(double.parse(currentWord), row, col));
+        tokens.add(
+            FloatToken(double.parse(currentWord), row, wordStartCol ?? col));
       } else if (currentWord == "true" || currentWord == "false") {
         tokens.add(BoolToken(bool.parse(currentWord), row, col));
       } else if (currentWord.contains(".")) {
         List<String> split = currentWord.split(".");
         if (split.length < 2) {
-          throw LexerException("this cannot start or end with '.'", row, col);
+          throw LexerException(
+              "this cannot start or end with '.'", row, wordStartCol ?? col);
         }
         if (_isValidName(split[0]) &&
             _isValidName(split[1]) &&
@@ -38,12 +42,14 @@ class Lexer {
           tokens.add(ObjectAccessToken(
               split[0], split[1], split.sublist(2), row, col));
         } else {
-          throw LexerException("contains invalid character for name", row, col);
+          throw LexerException(
+              "contains invalid character for name", row, wordStartCol ?? col);
         }
       } else if (_isValidName(currentWord)) {
-        tokens.add(NameToken(currentWord, row, col));
+        tokens.add(NameToken(currentWord, row, wordStartCol ?? col));
       }
       currentWord = "";
+      wordStartCol = null;
     }
 
     addToken(Token token, String char) {
@@ -56,7 +62,6 @@ class Lexer {
     }
 
     for (int i = 0; i < code.length; i++) {
-      col++;
       String char = code[i];
       switch (char) {
         case '(':
@@ -72,27 +77,38 @@ class Lexer {
         case '}':
           addToken(T3BracesCloseToken(row, col), char);
         case '\n':
-          currentWord += char;
+          if (isInString) {
+            currentWord += char;
+          }
           if (!isInString) {
+            stringStartRow ??= row;
+            wordStartCol ??= col;
             addWord();
           }
-          col = 0;
+          col = -1;
           row++;
         case '"':
+          wordStartCol ??= col;
           currentWord += char;
           isInString = !isInString;
           if (!isInString) {
-            tokens.add(StringToken(currentWord, row, col));
+            tokens.add(StringToken(
+                currentWord, stringStartRow ?? row, wordStartCol ?? col));
+          } else {
+            stringStartRow = row;
           }
         case ' ':
           if (!isInString) {
             addWord();
           } else {
+            wordStartCol ??= col;
             currentWord += char;
           }
         default:
+          wordStartCol ??= col;
           currentWord += char;
       }
+      col++;
     }
     return tokens;
   }
