@@ -2,6 +2,17 @@ import 'package:tll/parse/tokenize/lexer_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 class Lexer {
+  static Token _nameOrKeywordToken(String word, int row, int col) {
+    switch (word) {
+      case "mut":
+        return MutableToken(row, col);
+      case "opt":
+        return OptionalToken(row, col);
+      default:
+        return NameToken(word, row, col);
+    }
+  }
+
   static List<Token> tokenize(String code) {
     int row = 0;
     int col = 0;
@@ -38,7 +49,7 @@ class Lexer {
               "contains invalid character for name", row, wordStartCol ?? col);
         }
       } else if (_isValidName(currentWord)) {
-        tokens.add(NameToken(currentWord, row, wordStartCol ?? col));
+        tokens.add(_nameOrKeywordToken(currentWord, row, wordStartCol ?? col));
       } else {
         throw LexerException(
             "contains invalid character for name", row, wordStartCol ?? col);
@@ -89,6 +100,7 @@ class Lexer {
           if (!isInString) {
             tokens.add(StringToken(
                 currentWord, stringStartRow ?? row, wordStartCol ?? col));
+            currentWord = "";
           } else {
             stringStartRow = row;
           }

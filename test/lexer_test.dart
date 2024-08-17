@@ -1,4 +1,5 @@
 import 'package:tll/parse/tokenize/lexer.dart';
+import 'package:tll/parse/tokenize/lexer_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 import 'package:test/test.dart';
 

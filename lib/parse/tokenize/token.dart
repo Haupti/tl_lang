@@ -3,6 +3,16 @@ sealed class Token {
   int row;
   int col;
   Token(this.row, this.col, this.show);
+  static bool isBracketOpen(Token token) {
+    switch (token) {
+      case T1BracesOpenToken _:
+      case T2BracesOpenToken _:
+      case T3BracesOpenToken _:
+        return true;
+      default:
+        return false;
+    }
+  }
 }
 
 class T1BracesOpenToken implements Token {
@@ -130,6 +140,30 @@ class BoolToken implements Token {
   @override
   int row;
   BoolToken(this.value, this.row, this.col) : show = "bool:$value";
+}
+
+class OptionalToken implements Token {
+  @override
+  String show = "keyword:opt";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  OptionalToken(this.row, this.col);
+}
+
+class MutableToken implements Token {
+  @override
+  String show = "keyword:mut";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  MutableToken(this.row, this.col);
 }
 
 class NameToken implements Token {

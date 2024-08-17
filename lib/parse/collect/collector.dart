@@ -1,3 +1,5 @@
+import 'package:tll/parse/collect/collector_exception.dart';
+import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/tokenize/lexer.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
@@ -8,25 +10,43 @@ class Collector {
     return trimmedExpressionTokens;
   }
 
-  static Expression _toExpression(List<Token> tokens) {
+  static List<TokenGroup> _findGroups(List<Token> tokens) {
+    List<TokenGroup> foundGroups = [];
+    Token token;
+    for (int i = 0; i < tokens.length; i++) {
+      token = tokens[i];
+      if (Token.isBracketOpen(token)) {
+        var (expressionGroup, rest) = _findFirstExpressionAndRest(tokens);
+        if (expressionGroup == null) {
+          throw ParserException.atToken("unexpected empty expression", token);
+        }
+        foundGroups.add(expressionGroup);
+        foundGroups.addAll(_findGroups(rest));
+      } else {
+        foundGroups.add(SingleTokenGroup(token));
+      }
+    }
+    return foundGroups;
+  }
+
+  static ExpressionTokenGroup _toExpression(List<Token> tokens) {
     List<Token> innerTokens = _findInnerTokens(tokens);
 
     if (innerTokens.isEmpty) {
-      throw Exception("empty expressions are not allowed"); // TODO more info
+      throw ParserException.atToken(
+          "empty expressions are not allowed", tokens[0]);
     }
-    Token token = innerTokens[0];
-    Expression base;
-    for (int i = 0; i < innerTokens.length; i++) {
-      if (token is ObjectAccessToken) {
-        base = Node();
-      }
-      if (token is NameToken) {
-        base = Node();
-      }
+
+    Token baseToken = innerTokens[0];
+    if (baseToken is! ObjectAccessToken && baseToken is! NameToken) {
+      throw ParserException.atToken("unexpected invalid token", baseToken);
     }
+    List<TokenGroup> groups = _findGroups(innerTokens.sublist(1));
+
+    return ExpressionTokenGroup(SingleTokenGroup(baseToken), groups);
   }
 
-  static (Expression?, List<Token>) _findFirstExpressionAndRest(
+  static (ExpressionTokenGroup?, List<Token>) _findFirstExpressionAndRest(
       List<Token> tokens) {
     if (tokens.isEmpty) {
       return (null, []);
@@ -43,8 +63,8 @@ class Collector {
       throw Exception("expected a bracket here");
     }
 
-    Expression? tree;
-    int bracketCounter = 1;
+    ExpressionTokenGroup? tree;
+    int bracketCounter = 0;
     List<Token> expressionTokens = [];
     int i = 0;
     for (i = 0; i < tokens.length; i++) {
@@ -83,25 +103,28 @@ class Collector {
         break;
       }
     }
-    List<Token> rest = tokens.sublist(i + 1);
+    List<Token> rest = [];
+    if (rest.length > i + 1) {
+      rest = tokens.sublist(i + 1);
+    }
     return (tree, rest);
   }
 
-  static List<Expression> _findExpressions(List<Token> tokens) {
+  static List<ExpressionTokenGroup> _findExpressions(List<Token> tokens) {
     if (tokens.isEmpty) {
       return [];
     }
     var (tree, rest) = _findFirstExpressionAndRest(tokens);
 
     if (tree == null) {
-      // TODO add info where the initial bracket was and which bracket
-      throw Exception("could not find matching close for bracket");
+      throw ParserException.atToken(
+          "could not find matching close for bracket", tokens[0]);
     }
 
     // recursive
     // recursive stop
     if (rest.isNotEmpty) {
-      List<Expression> trees = [tree];
+      List<ExpressionTokenGroup> trees = [tree];
       trees.addAll(_findExpressions(rest));
       return trees;
     } else {
@@ -109,7 +132,7 @@ class Collector {
     }
   }
 
-  static List<Expression> findExpressions(String code) {
+  static List<ExpressionTokenGroup> findExpressions(String code) {
     List<Token> tokens = Lexer.tokenize(code);
     return _findExpressions(tokens);
   }
