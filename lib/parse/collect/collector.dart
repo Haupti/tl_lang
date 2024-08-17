@@ -16,12 +16,13 @@ class Collector {
     for (int i = 0; i < tokens.length; i++) {
       token = tokens[i];
       if (Token.isBracketOpen(token)) {
-        var (expressionGroup, rest) = _findFirstExpressionAndRest(tokens);
+        var (expressionGroup, rest) = _findFirstExpressionAndRest(tokens.sublist(i));
         if (expressionGroup == null) {
           throw ParserException.atToken("unexpected empty expression", token);
         }
         foundGroups.add(expressionGroup);
         foundGroups.addAll(_findGroups(rest));
+        break; // Take while instead of for loop which breaks here...
       } else {
         foundGroups.add(SingleTokenGroup(token));
       }
@@ -60,7 +61,7 @@ class Collector {
     } else if (tokens[0] is T3BracesOpenToken) {
       bracketType = "t3";
     } else {
-      throw Exception("expected a bracket here");
+      throw ParserException.atToken("expected a bracket here", tokens[0]);
     }
 
     ExpressionTokenGroup? tree;

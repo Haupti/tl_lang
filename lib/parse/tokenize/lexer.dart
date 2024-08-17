@@ -134,6 +134,6 @@ class Lexer {
     return str != "" &&
         !_startsWithOneOf(str, "0123456789") &&
         _containsOnly(str,
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_+*/?<>-");
   }
 }

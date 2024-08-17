@@ -6,7 +6,7 @@ extension Show on TokenGroup {
       case SingleTokenGroup s:
         return s.token.show;
       case ExpressionTokenGroup e:
-        return "${e.first.token.show} ${e.arguments.map((inner) => inner.show()).join(" ")}";
+        return "(${e.first.token.show} ${e.arguments.map((inner) => inner.show()).join(" ")})";
     }
   }
 }
