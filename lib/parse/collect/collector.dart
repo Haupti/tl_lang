@@ -105,7 +105,7 @@ class Collector {
       }
     }
     List<Token> rest = [];
-    if (rest.length > i + 1) {
+    if (tokens.length > i + 1) {
       rest = tokens.sublist(i + 1);
     }
     return (tree, rest);
