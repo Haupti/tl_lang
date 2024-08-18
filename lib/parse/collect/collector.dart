@@ -22,7 +22,7 @@ class Collector {
         }
         foundGroups.add(expressionGroup);
         foundGroups.addAll(_findGroups(rest));
-        break; // Take while instead of for loop which breaks here...
+        break; 
       } else {
         foundGroups.add(SingleTokenGroup(token));
       }
