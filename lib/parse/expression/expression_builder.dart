@@ -5,26 +5,35 @@ import 'package:tll/parse/expression/expression_builder_context.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 class ExpressionBuilder {
+
   static List<Expression> buildAll(List<TokenGroup> groups) {
-    return groups.map((it)=> _buildOne(it)).toList();
+    ScopeContext context = ModuleScopeContext();
+    return groups.map((it)=> _buildOne(it, context)).toList();
   }
-  static Expression _buildOne(TokenGroup group){
+
+  static Expression _buildOne(TokenGroup group, ScopeContext parentContext){
     switch(group){
       case SingleTokenGroup _:
-        return _singleToExpression(group);
+        return _singleToExpression(group, parentContext);
       case ExpressionTokenGroup _:
-        return _manyToExpression(group);
+        return _manyToExpression(group, parentContext);
     }
   }
-  static Expression _singleToExpression(SingleTokenGroup single, ExpressionBuilderContext context){
-    switch(single.token){
+
+  static Expression _singleToExpression(SingleTokenGroup single, ScopeContext context){
+    Token token = single.token;
+    switch(token){
       case NameToken _:
-        //  TODO verify that this exists in the context
-        // add the others which are valid as stand-alone tokens
+        if(context.hasNamedObject(token.value)){
+          // TODO should return something that tells the user what it is (Variable, Const, Function, Struct)
+          // and what type it has
+        }
+        
       default: throw ParserException.atToken("unexpected token",single.token);
     }
   }
-  static Expression _manyToExpression(ExpressionTokenGroup single){
+
+  static Expression _manyToExpression(ExpressionTokenGroup single, ScopeContext parentContext){
     // TODO 
     // decide which function to build
     // make single tokens to expressions (function above)

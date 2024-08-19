@@ -4,10 +4,18 @@ import 'package:tll/parse/tokenize/token.dart';
 class Lexer {
   static Token _nameOrKeywordToken(String word, int row, int col) {
     switch (word) {
-      case "mut":
-        return MutableToken(row, col);
-      case "opt":
-        return OptionalToken(row, col);
+      case "let":
+        return LetToken(row, col);
+      case "const":
+        return ConstToken(row, col);
+      case "defun":
+        return DefunToken(row, col);
+      case "type":
+        return SumTypeToken(row, col);
+      case "struct":
+        return StructTypeToken(row, col);
+      case "return":
+        return StructTypeToken(row, col);
       default:
         return NameToken(word, row, col);
     }

@@ -142,28 +142,76 @@ class BoolToken implements Token {
   BoolToken(this.value, this.row, this.col) : show = "bool:$value";
 }
 
-class OptionalToken implements Token {
+class ConstToken implements Token {
   @override
-  String show = "keyword:opt";
+  String show = "keyword:const";
 
   @override
   int col;
 
   @override
   int row;
-  OptionalToken(this.row, this.col);
+  ConstToken(this.row, this.col);
 }
 
-class MutableToken implements Token {
+class LetToken implements Token {
   @override
-  String show = "keyword:mut";
+  String show = "keyword:let";
 
   @override
   int col;
 
   @override
   int row;
-  MutableToken(this.row, this.col);
+  LetToken(this.row, this.col);
+}
+
+class DefunToken implements Token {
+  @override
+  String show = "keyword:defun";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  DefunToken(this.row, this.col);
+}
+
+class StructTypeToken implements Token {
+  @override
+  String show = "keyword:struct";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  StructTypeToken(this.row, this.col);
+}
+
+class SumTypeToken implements Token {
+  @override
+  String show = "keyword:struct";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  SumTypeToken(this.row, this.col);
+}
+
+class ReturnToken implements Token {
+  @override
+  String show = "keyword:return";
+
+  @override
+  int col;
+
+  @override
+  int row;
+  ReturnToken(this.row, this.col);
 }
 
 class NameToken implements Token {

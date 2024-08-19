@@ -1,8 +1,4 @@
-import 'package:tll/parse/tokenize/token.dart';
-
-class TLLType {
-  // TODO
-}
+import 'package:tll/parse/expression/type.dart';
 
 sealed class Expression {
   int row;
@@ -10,28 +6,67 @@ sealed class Expression {
   Expression(this.row, this.col);
 }
 
-class TypeExpression implements Expression {
+class ConstantDefinitionExpr implements Expression {
   @override
   int col;
 
   @override
   int row;
 
-  TLLType type;
-  TypeExpression(this.type, this.row, this.col);
-  TypeExpression.atToken(this.type, Token token)
-      : row = token.row,
-        col = token.col;
-  // TODO add 'fromToken' which also decides type based on token
+  ConstantDefinitionExpr(this.row, this.col);
 }
 
-class TypedName {
-  String name;
-  TLLType type;
-  TypedName(this.name, this.type);
+class VariableDefinitionExpr implements Expression {
+  @override
+  int col;
+
+  @override
+  int row;
+
+  VariableDefinitionExpr(this.row, this.col);
 }
 
-class DefunExpression implements Expression {
+class FunctionDefinitionExpr implements Expression {
+  @override
+  int col;
+
+  @override
+  int row;
+
+  FunctionDefinitionExpr(this.row, this.col);
+}
+
+sealed class TypeDefinitionExpr implements Expression {
+  @override
+  int col;
+
+  @override
+  int row;
+
+  TypeDefinitionExpr(this.row, this.col);
+}
+
+class StructTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
+  @override
+  int col;
+
+  @override
+  int row;
+
+  StructTypeDefinitionExpr(this.row, this.col);
+}
+
+class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
+  @override
+  int col;
+
+  @override
+  int row;
+
+  SumTypeDefinitionExpr(this.row, this.col);
+}
+
+class VariableReferenceExpression implements Expression {
   @override
   int col;
 
@@ -39,14 +74,7 @@ class DefunExpression implements Expression {
   int row;
 
   String name;
-  // ignore: unused_field 
-  final Map<String, TypedName> _argnames;// TODO use
-  TLLType returnType;
-  List<Expression> body;
-  DefunExpression(this.name, this.returnType, this._argnames, this.body,
-      this.row, this.col);
-  DefunExpression.atToken(
-      this.name, this.returnType, this._argnames, this.body, Token token)
-      : row = token.row,
-        col = token.col;
+  TLLType type;
+
+  VariableReferenceExpression(this.name, this.type, this.row, this.col);
 }
