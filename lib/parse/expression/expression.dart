@@ -1,80 +1,62 @@
+import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/expression/type.dart';
 
 sealed class Expression {
-  int row;
-  int col;
-  Expression(this.row, this.col);
+  Location location;
+  Expression(this.location);
 }
 
 class ConstantDefinitionExpr implements Expression {
   @override
-  int col;
-
-  @override
-  int row;
-
-  ConstantDefinitionExpr(this.row, this.col);
+  Location location;
+  ConstantDefinitionExpr(this.location);
 }
 
 class VariableDefinitionExpr implements Expression {
   @override
-  int col;
+  Location location;
 
-  @override
-  int row;
+  String name;
+  TLLType type;
+  Expression value;
 
-  VariableDefinitionExpr(this.row, this.col);
+  VariableDefinitionExpr(this.name, this.type, this.value, this.location);
 }
 
 class FunctionDefinitionExpr implements Expression {
   @override
-  int col;
+  Location location;
 
-  @override
-  int row;
-
-  FunctionDefinitionExpr(this.row, this.col);
+  FunctionDefinitionExpr(this.location);
 }
 
 sealed class TypeDefinitionExpr implements Expression {
   @override
-  int col;
+  Location location;
 
-  @override
-  int row;
-
-  TypeDefinitionExpr(this.row, this.col);
+  TypeDefinitionExpr(this.location);
 }
 
 class StructTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   @override
-  int col;
+  Location location;
 
-  @override
-  int row;
-
-  StructTypeDefinitionExpr(this.row, this.col);
+  StructTypeDefinitionExpr(this.location);
 }
 
 class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   @override
-  int col;
+  Location location;
 
-  @override
-  int row;
-
-  SumTypeDefinitionExpr(this.row, this.col);
+  SumTypeDefinitionExpr(this.location);
 }
 
 class VariableReferenceExpression implements Expression {
   @override
-  int col;
-
-  @override
-  int row;
+  Location location;
 
   String name;
   TLLType type;
 
-  VariableReferenceExpression(this.name, this.type, this.row, this.col);
+  VariableReferenceExpression(this.name, this.type, this.location);
 }

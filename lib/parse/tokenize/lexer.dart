@@ -14,8 +14,12 @@ class Lexer {
         return SumTypeToken(row, col);
       case "struct":
         return StructTypeToken(row, col);
-      case "return":
-        return StructTypeToken(row, col);
+      case "if":
+        return IfToken(row, col);
+      case "cond":
+        return ConstToken(row, col);
+      case "print":
+        return PrintToken(row, col);
       default:
         return NameToken(word, row, col);
     }

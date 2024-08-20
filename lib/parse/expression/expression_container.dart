@@ -1,19 +1,17 @@
-import 'package:tll/parse/expression/expression.dart';
+sealed class SmartMapActionResult {}
 
-sealed class ContainerActionResult {}
+class SmartMapActionSuccess implements SmartMapActionResult {}
 
-class ContainerActionSuccess implements ContainerActionResult {}
+class SmartMapActionFailure implements SmartMapActionResult {}
 
-class ContainerActionFailure implements ContainerActionResult {}
-
-class ExpressionContainer<T extends Expression> {
+class SmartMap<T> {
   Map<String, T> storage = {};
-  ContainerActionResult add(String name, T value) {
+  SmartMapActionResult add(String name, T value) {
     if (storage[name] != null) {
-      return ContainerActionFailure();
+      return SmartMapActionFailure();
     }
     storage[name] = value;
-    return ContainerActionSuccess();
+    return SmartMapActionSuccess();
   }
 
   bool has(String name){

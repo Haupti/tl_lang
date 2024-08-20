@@ -1,45 +1,134 @@
-import 'package:tll/parse/collect/collector_exception.dart';
 import 'package:tll/parse/collect/token_group.dart';
+import 'package:tll/parse/expression/builder/cond_expression_builder.dart';
+import 'package:tll/parse/expression/builder/const_expression_builder.dart';
+import 'package:tll/parse/expression/builder/defun_expression_builder.dart';
+import 'package:tll/parse/expression/builder/function_call_expression_builder.dart';
+import 'package:tll/parse/expression/builder/if_expression_builder.dart';
+import 'package:tll/parse/expression/builder/let_expression_builder.dart';
+import 'package:tll/parse/expression/builder/print_expression_builder.dart';
+import 'package:tll/parse/expression/builder/struct_type_expression_builder.dart';
+import 'package:tll/parse/expression/builder/sum_type_expression_builder.dart';
+import 'package:tll/parse/expression/builder/value_use_expression_builder.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder_context.dart';
+import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 class ExpressionBuilder {
+  static List<Expression> buildAllTopLevel(List<TokenGroup> groups) {
+    ScopeContext context = ModuleScopeContext();
+    return groups.map((it) => _buildOneTopLevel(it, context)).toList();
+  }
 
   static List<Expression> buildAll(List<TokenGroup> groups) {
     ScopeContext context = ModuleScopeContext();
-    return groups.map((it)=> _buildOne(it, context)).toList();
+    return groups.map((it) => _buildOne(it, context)).toList();
   }
 
-  static Expression _buildOne(TokenGroup group, ScopeContext parentContext){
-    switch(group){
+  static Expression _buildOneTopLevel(
+      TokenGroup group, ScopeContext parentContext) {
+    switch (group) {
       case SingleTokenGroup _:
-        return _singleToExpression(group, parentContext);
+        throw ParserException.atToken("unexpected token", group.token);
       case ExpressionTokenGroup _:
-        return _manyToExpression(group, parentContext);
+        return createExpression(group, parentContext);
     }
   }
 
-  static Expression _singleToExpression(SingleTokenGroup single, ScopeContext context){
-    Token token = single.token;
-    switch(token){
+  static Expression _buildOne(TokenGroup group, ScopeContext parentContext) {
+    switch (group) {
+      case SingleTokenGroup _:
+        return createValueExpression(group, parentContext);
+      case ExpressionTokenGroup _:
+        return createExpression(group, parentContext);
+    }
+  }
+
+  static Expression createValueExpression(
+      SingleTokenGroup expr, ScopeContext parentContext) {
+    Token token = expr.token;
+    switch (token) {
+      case DefunToken _:
+      case LetToken _:
+      case ConstToken _:
+      case SumTypeToken _:
+      case StructTypeToken _:
+      case IfToken _:
+      case CondToken _:
+      case PrintToken _:
+      case T1BracesOpenToken _:
+      case T2BracesOpenToken _:
+      case T3BracesOpenToken _:
+      case T1BracesCloseToken _:
+      case T2BracesCloseToken _:
+      case T3BracesCloseToken _:
+        throw ParserException.atToken("unexpected token", token);
+      case IntToken _:
+      case FloatToken _:
+      case StringToken _:
+      case BoolToken _:
       case NameToken _:
-        if(context.hasNamedObject(token.value)){
-          // TODO should return something that tells the user what it is (Variable, Const, Function, Struct)
-          // and what type it has
-        }
-        
-      default: throw ParserException.atToken("unexpected token",single.token);
+        return ValueUseExpressionBuilder.build(token, parentContext);
+      case ObjectAccessToken _:
+        return ValueUseExpressionBuilder.buildAccessedValue(
+            token,
+            token.objectName,
+            token.accessedName,
+            token.subaccessedNames,
+            parentContext);
     }
   }
 
-  static Expression _manyToExpression(ExpressionTokenGroup single, ScopeContext parentContext){
-    // TODO 
+  static Expression createExpression(
+      ExpressionTokenGroup expr, ScopeContext parentContext) {
+    // TODO
     // decide which function to build
     // make single tokens to expressions (function above)
     // when necessary add stuff to context (let, const, defun, struct and type definitions)
     // on function calls or assignments verify the types
     // next step will be code generation in other language
-    throw Exception("not yet implemented");
+    Token first = expr.first.token;
+    switch (first) {
+      case DefunToken _:
+        return DefunExpressionBuilder.build(expr.arguments, parentContext);
+      case LetToken _:
+        return LetExpressionBuilder.build(
+            Location.fromToken(first), expr.arguments, parentContext);
+      case ConstToken _:
+        return ConstExpressionBuilder.build(expr.arguments, parentContext);
+      case SumTypeToken _:
+        return SumTypeExpressionBuilder.build(expr.arguments, parentContext);
+      case StructTypeToken _:
+        return StructTypeExpressionBuilder.build(expr.arguments, parentContext);
+      case IfToken _:
+        return IfExpressionBuilder.build(expr.arguments, parentContext);
+      case CondToken _:
+        return CondExpressionBuilder.build(expr.arguments, parentContext);
+      case PrintToken _:
+        return PrintExpressionBuilder.build(expr.arguments, parentContext);
+      case NameToken _:
+        return FunctionCallExpressionBuilder.build(
+            first, expr.arguments, parentContext);
+      case ObjectAccessToken _:
+        return FunctionCallExpressionBuilder.buildAccessedCall(
+            first,
+            first.objectName,
+            first.accessedName,
+            first.subaccessedNames,
+            expr.arguments,
+            parentContext);
+      case T1BracesOpenToken _:
+      case T2BracesOpenToken _:
+      case T3BracesOpenToken _:
+      case T1BracesCloseToken _:
+      case T2BracesCloseToken _:
+      case T3BracesCloseToken _:
+      case IntToken _:
+      case FloatToken _:
+      case StringToken _:
+      case BoolToken _:
+        throw ParserException.atToken("unexpected token", first);
+    }
   }
 }
