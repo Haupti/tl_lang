@@ -5,7 +5,6 @@ import 'package:tll/parse/expression/builder/defun_expression_builder.dart';
 import 'package:tll/parse/expression/builder/function_call_expression_builder.dart';
 import 'package:tll/parse/expression/builder/if_expression_builder.dart';
 import 'package:tll/parse/expression/builder/let_expression_builder.dart';
-import 'package:tll/parse/expression/builder/print_expression_builder.dart';
 import 'package:tll/parse/expression/builder/struct_type_expression_builder.dart';
 import 'package:tll/parse/expression/builder/sum_type_expression_builder.dart';
 import 'package:tll/parse/expression/builder/value_use_expression_builder.dart';
@@ -23,7 +22,7 @@ class ExpressionBuilder {
 
   static List<Expression> buildAll(List<TokenGroup> groups) {
     ScopeContext context = ModuleScopeContext();
-    return groups.map((it) => _buildOne(it, context)).toList();
+    return groups.map((it) => buildOne(it, context)).toList();
   }
 
   static Expression _buildOneTopLevel(
@@ -36,7 +35,7 @@ class ExpressionBuilder {
     }
   }
 
-  static Expression _buildOne(TokenGroup group, ScopeContext parentContext) {
+  static Expression buildOne(TokenGroup group, ScopeContext parentContext) {
     switch (group) {
       case SingleTokenGroup _:
         return createValueExpression(group, parentContext);
@@ -56,7 +55,6 @@ class ExpressionBuilder {
       case StructTypeToken _:
       case IfToken _:
       case CondToken _:
-      case PrintToken _:
       case T1BracesOpenToken _:
       case T2BracesOpenToken _:
       case T3BracesOpenToken _:
@@ -96,7 +94,8 @@ class ExpressionBuilder {
         return LetExpressionBuilder.build(
             Location.fromToken(first), expr.arguments, parentContext);
       case ConstToken _:
-        return ConstExpressionBuilder.build(expr.arguments, parentContext);
+        return ConstExpressionBuilder.build(
+            Location.fromToken(first), expr.arguments, parentContext);
       case SumTypeToken _:
         return SumTypeExpressionBuilder.build(expr.arguments, parentContext);
       case StructTypeToken _:
@@ -105,8 +104,6 @@ class ExpressionBuilder {
         return IfExpressionBuilder.build(expr.arguments, parentContext);
       case CondToken _:
         return CondExpressionBuilder.build(expr.arguments, parentContext);
-      case PrintToken _:
-        return PrintExpressionBuilder.build(expr.arguments, parentContext);
       case NameToken _:
         return FunctionCallExpressionBuilder.build(
             first, expr.arguments, parentContext);

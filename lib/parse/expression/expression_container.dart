@@ -1,24 +1,18 @@
-sealed class SmartMapActionResult {}
-
-class SmartMapActionSuccess implements SmartMapActionResult {}
-
-class SmartMapActionFailure implements SmartMapActionResult {}
-
 class SmartMap<T> {
   Map<String, T> storage = {};
-  SmartMapActionResult add(String name, T value) {
+  void add(String name, T value) {
     if (storage[name] != null) {
-      return SmartMapActionFailure();
+      throw Exception(
+          "BUG: this should not occur, check if this name is taken");
     }
     storage[name] = value;
-    return SmartMapActionSuccess();
   }
 
-  bool has(String name){
+  bool has(String name) {
     return storage[name] != null;
   }
 
-  T? get(String name){
+  T? get(String name) {
     return storage[name];
   }
 }

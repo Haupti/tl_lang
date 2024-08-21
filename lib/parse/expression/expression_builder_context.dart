@@ -5,8 +5,10 @@ import 'package:tll/parse/tokenize/token.dart';
 
 sealed class ScopeContext {
   bool hasNamedObject(String value);
-
+  TLLType? getTypeOf(String name);
   void addVariable(NameToken name, TLLType type) {}
+
+  void addConstant(NameToken name, TLLType type) {}
 }
 
 class ModuleScopeContext implements ScopeContext {
@@ -20,14 +22,31 @@ class ModuleScopeContext implements ScopeContext {
     return constants.has(name) || variables.has(name) || functions.has(name);
   }
 
+  bool _isFreeToDefine(String name) {
+    return constants.has(name) || variables.has(name) || functions.has(name);
+  }
+
   @override
   void addVariable(NameToken name, TLLType type) {
-    switch (variables.add(name.value, type)) {
-      case SmartMapActionSuccess _:
-        return;
-      case SmartMapActionFailure _:
-        throw ParserException.atToken("variable already in scope", name);
+    if (_isFreeToDefine(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
     }
+    variables.add(name.value, type);
+  }
+
+  @override
+  void addConstant(NameToken name, TLLType type) {
+    if (_isFreeToDefine(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
+    }
+    variables.add(name.value, type);
+  }
+
+  @override
+  TLLType? getTypeOf(String name) {
+    return constants.get(name) ?? variables.get(name) ?? functions.get(name);
   }
 }
 
@@ -48,13 +67,33 @@ class FunctionScopeContext implements ScopeContext {
         parentScope.hasNamedObject(name);
   }
 
+  bool _isFreeToDefine(String name) {
+    return constants.has(name) || variables.has(name) || functions.has(name);
+  }
+
   @override
   void addVariable(NameToken name, TLLType type) {
-    switch (variables.add(name.value, type)) {
-      case SmartMapActionSuccess _:
-        return;
-      case SmartMapActionFailure _:
-        throw ParserException.atToken("variable already in scope", name);
+    if (_isFreeToDefine(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
     }
+    variables.add(name.value, type);
+  }
+
+  @override
+  void addConstant(NameToken name, TLLType type) {
+    if (_isFreeToDefine(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
+    }
+    variables.add(name.value, type);
+  }
+
+  @override
+  TLLType? getTypeOf(String name) {
+    return constants.get(name) ??
+        variables.get(name) ??
+        functions.get(name) ??
+        parentScope.getTypeOf(name);
   }
 }

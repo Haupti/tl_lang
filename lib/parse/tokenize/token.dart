@@ -202,18 +202,6 @@ class SumTypeToken implements Token {
   SumTypeToken(this.row, this.col);
 }
 
-class PrintToken implements Token {
-  @override
-  String show = "keyword:print";
-
-  @override
-  int col;
-
-  @override
-  int row;
-  PrintToken(this.row, this.col);
-}
-
 class CondToken implements Token {
   @override
   String show = "keyword:cond";

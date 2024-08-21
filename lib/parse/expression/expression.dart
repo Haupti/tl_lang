@@ -1,4 +1,5 @@
 import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/expression/type.dart';
 
 sealed class Expression {
@@ -9,7 +10,11 @@ sealed class Expression {
 class ConstantDefinitionExpr implements Expression {
   @override
   Location location;
-  ConstantDefinitionExpr(this.location);
+
+  String name;
+  TLLType type;
+  Expression value;
+  ConstantDefinitionExpr(this.name, this.type, this.value, this.location);
 }
 
 class VariableDefinitionExpr implements Expression {
@@ -51,12 +56,22 @@ class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   SumTypeDefinitionExpr(this.location);
 }
 
-class VariableReferenceExpression implements Expression {
+class ReferenceExpression implements Expression {
   @override
   Location location;
 
   String name;
   TLLType type;
 
-  VariableReferenceExpression(this.name, this.type, this.location);
+  ReferenceExpression(this.name, this.type, this.location);
+}
+
+class PrimitiveValueExpression implements Expression {
+  @override
+  Location location;
+
+  PrimitiveValue value;
+  TLLType type;
+
+  PrimitiveValueExpression(this.value, this.type, this.location);
 }

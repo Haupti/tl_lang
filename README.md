@@ -35,3 +35,21 @@ and for lambdas:
 ```
 they take three arguments, a list of types, a list of argument names and then the body
 
+## and defining types themselfes
+
+```
+(type name int float bool)
+```
+for a general type alias
+
+and 
+```
+(type greeting "hi" "salut" "gude")
+```
+for a value type
+or combination
+
+```
+(type result "success" int)
+```
+
