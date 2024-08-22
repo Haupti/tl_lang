@@ -3,26 +3,43 @@ import 'package:tll/parse/expression/type.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 class TLLTypeError implements Exception {
-  final TLLType actualType;
-  final TLLType expectedType;
-  final int row;
-  final int col;
+  String message;
 
   @override
   String toString() {
-      return "TYPE-ERROR at ($row,$col): expected $expectedType but got $actualType.";
+    return message;
   }
 
-  TLLTypeError.atTokenGroup(this.actualType, this.expectedType, TokenGroup mismatchingGroup)
-      : row = _toToken(mismatchingGroup).row,
-        col = _toToken(mismatchingGroup).col;
+  TLLTypeError.atTokenGroup(
+      TLLType actualType, TLLType expectedType, TokenGroup mismatchingGroup)
+      : message =
+            "TYPE-ERROR at (${_toToken(mismatchingGroup).row},${_toToken(mismatchingGroup).col}): expected $expectedType but got $actualType.";
 
-  static Token _toToken(TokenGroup group){
-    switch(group){
-    case ExpressionTokenGroup _:
-      return group.first.token;
-    case SingleTokenGroup _:
-      return group.token;
+  TLLTypeError.atToken(
+      TLLType actualType, TLLType expectedType, Token mismatchingToken)
+      : message =
+            "TYPE-ERROR at (${mismatchingToken.row},${mismatchingToken.col}): expected $expectedType but got $actualType.";
+
+  TLLTypeError.objectDoesNotHave(
+      TLLType actualType, String fieldName, Token mismatchingToken)
+      : message =
+            "TYPE-ERROR (${mismatchingToken.row}, ${mismatchingToken.col}): the type $actualType does not have field '$fieldName'";
+
+  TLLTypeError.expectedAType(
+      TLLType actualType, String expected, Token mismatchingToken)
+      : message =
+            "TYPE-ERROR (${mismatchingToken.row}, ${mismatchingToken.col}): expected a $expected here, but got a $actualType";
+
+  TLLTypeError.withMessage(String message, Token mismatchingToken)
+      : message =
+            "TYPE-ERROR at (${mismatchingToken.row}, ${mismatchingToken.col}): $message";
+
+  static Token _toToken(TokenGroup group) {
+    switch (group) {
+      case ExpressionTokenGroup _:
+        return group.first.token;
+      case SingleTokenGroup _:
+        return group.token;
     }
   }
 }

@@ -10,3 +10,9 @@ class TLLFunctionType extends TLLType {
   List<TLLType> argumentTypes;
   TLLFunctionType(this.returnType, this.argumentTypes);
 }
+
+class TLLStructType extends TLLType {
+  TLLType? getTypeOfField(String accessedName) {
+    throw Exception("not yet implemented");
+  }
+}

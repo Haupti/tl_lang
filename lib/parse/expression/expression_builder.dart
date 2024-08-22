@@ -109,12 +109,7 @@ class ExpressionBuilder {
             first, expr.arguments, parentContext);
       case ObjectAccessToken _:
         return FunctionCallExpressionBuilder.buildAccessedCall(
-            first,
-            first.objectName,
-            first.accessedName,
-            first.subaccessedNames,
-            expr.arguments,
-            parentContext);
+            first, expr.arguments, parentContext);
       case T1BracesOpenToken _:
       case T2BracesOpenToken _:
       case T3BracesOpenToken _:
