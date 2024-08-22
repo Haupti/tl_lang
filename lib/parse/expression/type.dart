@@ -1,4 +1,9 @@
-sealed class TLLType {}
+sealed class TLLType {
+  bool suffices(TLLType argumentTyp) {
+    // TODO: check if the current type fulfils the criteria to be the argument type
+    throw Exception("not yet implemented");
+  }
+}
 
 class TLLFunctionType extends TLLType {
   TLLType returnType;

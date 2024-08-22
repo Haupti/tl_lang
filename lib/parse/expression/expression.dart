@@ -3,8 +3,9 @@ import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/expression/type.dart';
 
 sealed class Expression {
+  TLLType type;
   Location location;
-  Expression(this.location);
+  Expression(this.type, this.location);
 }
 
 class ConstantDefinitionExpr implements Expression {
@@ -12,6 +13,7 @@ class ConstantDefinitionExpr implements Expression {
   Location location;
 
   String name;
+  @override
   TLLType type;
   Expression value;
   ConstantDefinitionExpr(this.name, this.type, this.value, this.location);
@@ -22,6 +24,7 @@ class VariableDefinitionExpr implements Expression {
   Location location;
 
   String name;
+  @override
   TLLType type;
   Expression value;
 
@@ -32,7 +35,10 @@ class FunctionDefinitionExpr implements Expression {
   @override
   Location location;
 
-  FunctionDefinitionExpr(this.location);
+  @override
+  TLLType type;
+
+  FunctionDefinitionExpr(this.type, this.location);
 }
 
 sealed class TypeDefinitionExpr implements Expression {
@@ -46,14 +52,20 @@ class StructTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   @override
   Location location;
 
-  StructTypeDefinitionExpr(this.location);
+  @override
+  TLLType type;
+
+  StructTypeDefinitionExpr(this.type, this.location);
 }
 
 class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   @override
   Location location;
 
-  SumTypeDefinitionExpr(this.location);
+  @override
+  TLLType type;
+
+  SumTypeDefinitionExpr(this.type, this.location);
 }
 
 class ReferenceExpression implements Expression {
@@ -61,6 +73,7 @@ class ReferenceExpression implements Expression {
   Location location;
 
   String name;
+  @override
   TLLType type;
 
   ReferenceExpression(this.name, this.type, this.location);
@@ -71,7 +84,25 @@ class PrimitiveValueExpression implements Expression {
   Location location;
 
   PrimitiveValue value;
+  @override
   TLLType type;
 
   PrimitiveValueExpression(this.value, this.type, this.location);
+}
+
+class FunctionCallExpression implements Expression {
+  @override
+  Location location;
+
+  TLLType returnType;
+
+  @override
+  TLLType get type => returnType;
+
+  FunctionCallExpression(this.returnType, this.location);
+
+  @override
+  set type(TLLType _) {
+    throw Exception("do not call this");
+  }
 }

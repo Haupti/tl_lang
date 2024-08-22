@@ -1,3 +1,4 @@
+import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
@@ -25,4 +26,18 @@ class ParserException implements Exception {
       : row = start.row,
         col = start.col,
         savedToken = null;
+
+  ParserException.atTokenGroup(this.message, TokenGroup group)
+      : row = _toToken(group).row,
+        col = _toToken(group).col,
+        savedToken = _toToken(group);
+
+  static Token _toToken(TokenGroup group) {
+    switch (group) {
+      case ExpressionTokenGroup _:
+        return group.first.token;
+      case SingleTokenGroup _:
+        return group.token;
+    }
+  }
 }
