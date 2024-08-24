@@ -16,3 +16,29 @@ class TLLStructType extends TLLType {
     throw Exception("not yet implemented");
   }
 }
+
+class TLLSumType extends TLLType {
+  String name;
+  List<TLLType> allowedTypes;
+  TLLSumType(this.name, this.allowedTypes);
+}
+
+class TLLIntValueType extends TLLType {
+  int value;
+  TLLIntValueType(this.value);
+}
+
+class TLLFloatValueType extends TLLType {
+  double value;
+  TLLFloatValueType(this.value);
+}
+
+class TLLStringValueType extends TLLType {
+  String value;
+  TLLStringValueType(this.value);
+}
+
+class TLLBoolValueType extends TLLType {
+  bool value;
+  TLLBoolValueType(this.value);
+}

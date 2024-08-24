@@ -2,7 +2,7 @@ import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
-class ExpressionConverter {
+class TokenGroupConverter {
   static SingleTokenGroup toSingleOrThrow(TokenGroup group, String message) {
     if (group is ExpressionTokenGroup) {
       throw ParserException.atToken(message, group.first.token);

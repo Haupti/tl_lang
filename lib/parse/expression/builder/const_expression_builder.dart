@@ -15,15 +15,15 @@ class ConstExpressionBuilder {
       throw ParserException.at(
           "expected a type, name and value argument", start);
     }
-    SingleTokenGroup typeToken = ExpressionConverter.toSingleOrThrow(
+    SingleTokenGroup typeToken = TokenGroupConverter.toSingleOrThrow(
         arguments[0], "expected a type here");
-    SingleTokenGroup nameToken = ExpressionConverter.toSingleOrThrow(
+    SingleTokenGroup nameToken = TokenGroupConverter.toSingleOrThrow(
         arguments[1], "expected a name here");
 
     NameToken typeName =
-        ExpressionConverter.toNameOrThrow(typeToken, "expected a type here");
+        TokenGroupConverter.toNameOrThrow(typeToken, "expected a type here");
     NameToken name =
-        ExpressionConverter.toNameOrThrow(nameToken, "expected a name here");
+        TokenGroupConverter.toNameOrThrow(nameToken, "expected a name here");
 
     TLLType type = TypeVerifier.toTypeOrThrow(typeName, parentContext);
 

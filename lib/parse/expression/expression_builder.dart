@@ -97,7 +97,7 @@ class ExpressionBuilder {
         return ConstExpressionBuilder.build(
             Location.fromToken(first), expr.arguments, parentContext);
       case SumTypeToken _:
-        return SumTypeExpressionBuilder.build(expr.arguments, parentContext);
+        return SumTypeExpressionBuilder.build(first, expr.arguments, parentContext);
       case StructTypeToken _:
         return StructTypeExpressionBuilder.build(expr.arguments, parentContext);
       case IfToken _:
