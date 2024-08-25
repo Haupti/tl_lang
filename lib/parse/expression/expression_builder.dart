@@ -99,7 +99,7 @@ class ExpressionBuilder {
       case SumTypeToken _:
         return SumTypeExpressionBuilder.build(first, expr.arguments, parentContext);
       case StructTypeToken _:
-        return StructTypeExpressionBuilder.build(expr.arguments, parentContext);
+        return StructTypeExpressionBuilder.build(first, expr.arguments, parentContext);
       case IfToken _:
         return IfExpressionBuilder.build(expr.arguments, parentContext);
       case CondToken _:

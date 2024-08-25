@@ -12,8 +12,13 @@ class TLLFunctionType extends TLLType {
 }
 
 class TLLStructType extends TLLType {
+  String name;
+  Map<String, TLLType> fields;
+
+  TLLStructType(this.name, this.fields);
+
   TLLType? getTypeOfField(String accessedName) {
-    throw Exception("not yet implemented");
+    return fields[accessedName];
   }
 }
 

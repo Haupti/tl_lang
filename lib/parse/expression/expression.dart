@@ -54,8 +54,9 @@ class StructTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
 
   @override
   TLLType type;
+  String name;
 
-  StructTypeDefinitionExpr(this.type, this.location);
+  StructTypeDefinitionExpr(this.name, this.type, this.location);
 }
 
 class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {

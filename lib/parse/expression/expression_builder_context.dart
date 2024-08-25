@@ -4,11 +4,13 @@ import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 sealed class ScopeContext {
-  bool hasNamedObject(String value);
+  bool hasNamedValue(String value);
   TLLType? getTypeOf(String name);
+  TLLType? findType(String name);
   void addVariable(NameToken name, TLLType type) {}
 
   void addConstant(NameToken name, TLLType type) {}
+  void addType(NameToken name, TLLType type) {}
 }
 
 class ModuleScopeContext implements ScopeContext {
@@ -18,12 +20,15 @@ class ModuleScopeContext implements ScopeContext {
   SmartMap<TLLType> types = SmartMap();
 
   @override
-  bool hasNamedObject(String name) {
+  bool hasNamedValue(String name) {
     return constants.has(name) || variables.has(name) || functions.has(name);
   }
 
   bool _isFreeToDefine(String name) {
-    return constants.has(name) || variables.has(name) || functions.has(name);
+    return !constants.has(name) &&
+        !variables.has(name) &&
+        !functions.has(name) &&
+        !types.has(name);
   }
 
   @override
@@ -48,6 +53,20 @@ class ModuleScopeContext implements ScopeContext {
   TLLType? getTypeOf(String name) {
     return constants.get(name) ?? variables.get(name) ?? functions.get(name);
   }
+
+  @override
+  void addType(NameToken name, TLLType type) {
+    if (hasNamedValue(name.value) || types.has(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
+    }
+    types.add(name.value, type);
+  }
+
+  @override
+  TLLType? findType(String name) {
+    return types.get(name);
+  }
 }
 
 class FunctionScopeContext implements ScopeContext {
@@ -60,15 +79,19 @@ class FunctionScopeContext implements ScopeContext {
   FunctionScopeContext(this.parentScope);
 
   @override
-  bool hasNamedObject(String name) {
+  bool hasNamedValue(String name) {
     return constants.has(name) ||
         variables.has(name) ||
         functions.has(name) ||
-        parentScope.hasNamedObject(name);
+        parentScope.hasNamedValue(name);
   }
 
   bool _isFreeToDefine(String name) {
-    return constants.has(name) || variables.has(name) || functions.has(name);
+    return !constants.has(name) &&
+        !variables.has(name) &&
+        !functions.has(name) &&
+        !types.has(name) &&
+        parentScope.findType(name) == null;
   }
 
   @override
@@ -95,5 +118,24 @@ class FunctionScopeContext implements ScopeContext {
         variables.get(name) ??
         functions.get(name) ??
         parentScope.getTypeOf(name);
+  }
+
+  @override
+  void addType(NameToken name, TLLType type) {
+    if (hasNamedValue(name.value) || types.has(name.value)) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken in current scope", name);
+    }
+    if (parentScope.findType(name.value) != null) {
+      throw ParserException.atToken(
+          "the name '${name.value}' is already taken. types cannot be shadowed",
+          name);
+    }
+    types.add(name.value, type);
+  }
+
+  @override
+  TLLType? findType(String name) {
+    return types.get(name) ?? parentScope.findType(name);
   }
 }

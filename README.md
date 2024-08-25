@@ -37,6 +37,7 @@ they take three arguments, a list of types, a list of argument names and then th
 
 ## and defining types themselfes
 
+### sum type
 ```
 (type name int float bool)
 ```
@@ -53,3 +54,10 @@ or combination
 (type result "success" int)
 ```
 
+### struct types
+```
+(struct Person 
+    int age
+    string name
+    )
+```

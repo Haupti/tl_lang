@@ -20,4 +20,9 @@ class TokenGroupConverter {
     }
     return token;
   }
+
+  static NameToken toSingleNameOrThrow(TokenGroup group, String message) {
+    SingleTokenGroup single = toSingleOrThrow(group, message);
+    return toNameOrThrow(single, message);
+  }
 }

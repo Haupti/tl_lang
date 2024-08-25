@@ -25,7 +25,7 @@ class ConstExpressionBuilder {
     NameToken name =
         TokenGroupConverter.toNameOrThrow(nameToken, "expected a name here");
 
-    TLLType type = TypeVerifier.toTypeOrThrow(typeName, parentContext);
+    TLLType type = TypeVerifier.asValidType(typeName, parentContext);
 
     TokenGroup valueGroup = arguments[2];
     Expression valueExpression;
