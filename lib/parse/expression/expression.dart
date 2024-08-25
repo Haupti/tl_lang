@@ -68,6 +68,19 @@ class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   SumTypeDefinitionExpr(this.type, this.location);
 }
 
+class AccessedValueReferenceExpression implements Expression {
+  @override
+  Location location;
+
+  String objectName;
+  String accessedField;
+  List<String> subaccessedFields;
+  @override
+  TLLType type;
+
+  AccessedValueReferenceExpression(this.objectName, this.accessedField, this.subaccessedFields, this.type, this.location);
+}
+
 class ValueReferenceExpression implements Expression {
   @override
   Location location;

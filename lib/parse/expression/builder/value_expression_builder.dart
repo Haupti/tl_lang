@@ -46,6 +46,7 @@ class ValueExpressionBuilder {
   }
 
   static Expression buildFromAccessedValue(ObjectAccessToken token, ScopeContext parentContext) {
-    TokenUtils.toTypeOfAccessedValue()
+    TLLType type = TokenUtils.toTypeOfAccessedValue(token, parentContext);
+    return AccessedValueReferenceExpression(token.objectName, token.accessedName, token.subaccessedNames, type, Location.fromToken(token));
   }
 }
