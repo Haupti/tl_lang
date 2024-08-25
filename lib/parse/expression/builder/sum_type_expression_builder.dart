@@ -1,5 +1,5 @@
 import 'package:tll/parse/collect/token_group.dart';
-import 'package:tll/parse/expression/builder/convert/expression_converter.dart';
+import 'package:tll/parse/expression/builder/utils/token_utils.dart';
 import 'package:tll/parse/expression/builder/verify/type_verifyier.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder_context.dart';
@@ -14,13 +14,13 @@ class SumTypeExpressionBuilder {
     if (arguments.length < 2) {
       throw ParserException.atToken("expected at least two arguments", start);
     }
-    NameToken name = TokenGroupConverter.toSingleNameOrThrow(
+    NameToken name = TokenUtils.toSingleNameOrThrow(
         arguments[1], "expected a valid type name");
 
     List<TLLType> types = [];
 
     for (final tokenGroup in arguments) {
-      Token token = TokenGroupConverter.toSingleOrThrow(tokenGroup, "").token;
+      Token token = TokenUtils.toSingleOrThrow(tokenGroup, "").token;
       types.add(TypeVerifier.toTypeOrThrow(token, parentContext));
     }
 

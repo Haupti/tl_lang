@@ -1,4 +1,6 @@
 import 'package:tll/parse/collect/token_group.dart';
+import 'package:tll/parse/expression/builder/convert/expression_converter.dart';
+import 'package:tll/parse/expression/builder/utils/token_utils.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
 import 'package:tll/parse/expression/expression_builder_context.dart';
@@ -22,7 +24,7 @@ class FunctionCallExpressionBuilder {
       Expression argumentExpression =
           ExpressionBuilder.buildOne(arguments[i], parentContext);
       switch (argumentExpression) {
-        case ReferenceExpression _:
+        case ValueReferenceExpression _:
         case FunctionCallExpression _:
         case PrimitiveValueExpression _:
           argumentExpressions.add(_typechecked(
@@ -57,48 +59,10 @@ class FunctionCallExpressionBuilder {
     return type;
   }
 
-  static TLLType _toTypeOfAccessedValue(
-      ObjectAccessToken token, ScopeContext context) {
-    TLLType? type = context.getTypeOf(token.objectName);
-    if (type == null) {
-      throw ParserException.atToken(
-          "'${token.objectName}' does not exist", token);
-    }
-    if (type is! TLLStructType) {
-      throw TLLTypeError.objectDoesNotHave(type, token.accessedName, token);
-    }
-
-    //accessed field might not exist in type
-    TLLType? accessedFieldType = type.getTypeOfField(token.accessedName);
-    if (accessedFieldType == null) {
-      throw TLLTypeError.objectDoesNotHave(type, token.accessedName, token);
-    }
-
-    // if we are not at struct type we cannot access fields of it
-    if (accessedFieldType is! TLLStructType &&
-        token.subaccessedNames.isNotEmpty) {
-      throw TLLTypeError.objectDoesNotHave(
-          accessedFieldType, token.subaccessedNames[0], token);
-    }
-
-    // find type of last accessed object
-    TLLType resultType = accessedFieldType;
-    for (final subName in token.subaccessedNames) {
-      if (resultType is! TLLStructType) {
-        throw TLLTypeError.objectDoesNotHave(resultType, subName, token);
-      }
-      TLLType? accessedFieldType = resultType.getTypeOfField(subName);
-      if (accessedFieldType == null) {
-        throw TLLTypeError.objectDoesNotHave(type, token.accessedName, token);
-      }
-      resultType = accessedFieldType;
-    }
-    return resultType;
-  }
 
   static Expression buildAccessedCall(ObjectAccessToken fullToken,
       List<TokenGroup> arguments, ScopeContext parentContext) {
-    TLLType functionType = _toTypeOfAccessedValue(fullToken, parentContext);
+    TLLType functionType = TokenUtils.toTypeOfAccessedValue(fullToken, parentContext);
     if (functionType is! TLLFunctionType) {
       throw TLLTypeError.expectedAType(functionType, "function", fullToken);
     }
@@ -113,7 +77,7 @@ class FunctionCallExpressionBuilder {
       Expression actualExpression =
           ExpressionBuilder.buildOne(arguments[i], parentContext);
       switch (actualExpression) {
-        case ReferenceExpression _:
+        case ValueReferenceExpression _:
         case FunctionCallExpression _:
         case PrimitiveValueExpression _:
           argumentExpressions.add(_typechecked(

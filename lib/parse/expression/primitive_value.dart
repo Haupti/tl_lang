@@ -1,21 +1,21 @@
 sealed class PrimitiveValue {}
 
-class IntValue {
+class IntValue implements PrimitiveValue {
   int value;
   IntValue(this.value);
 }
 
-class FloatValue {
+class FloatValue implements PrimitiveValue {
   double value;
   FloatValue(this.value);
 }
 
-class StringValue {
+class StringValue implements PrimitiveValue {
   String value;
   StringValue(this.value);
 }
 
-class BooleanValue {
+class BoolValue implements PrimitiveValue {
   bool value;
-  BooleanValue(this.value);
+  BoolValue(this.value);
 }

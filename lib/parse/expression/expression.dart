@@ -68,7 +68,7 @@ class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
   SumTypeDefinitionExpr(this.type, this.location);
 }
 
-class ReferenceExpression implements Expression {
+class ValueReferenceExpression implements Expression {
   @override
   Location location;
 
@@ -76,7 +76,7 @@ class ReferenceExpression implements Expression {
   @override
   TLLType type;
 
-  ReferenceExpression(this.name, this.type, this.location);
+  ValueReferenceExpression(this.name, this.type, this.location);
 }
 
 class PrimitiveValueExpression implements Expression {

@@ -80,3 +80,6 @@ class TLLBoolValueType extends TLLType {
 }
 
 class TLLBoolType extends TLLType {}
+class TLLIntType extends TLLType {}
+class TLLFloatType extends TLLType {}
+class TLLStringType extends TLLType {}

@@ -63,18 +63,18 @@ class ExpressionBuilder {
       case T3BracesCloseToken _:
         throw ParserException.atToken("unexpected token", token);
       case IntToken _:
+        return ValueExpressionBuilder.buildInt(token, parentContext);
       case FloatToken _:
+        return ValueExpressionBuilder.buildFloat(token, parentContext);
       case StringToken _:
+        return ValueExpressionBuilder.buildString(token, parentContext);
       case BoolToken _:
+        return ValueExpressionBuilder.buildBool(token, parentContext);
       case NameToken _:
-        return ValueExpressionBuilder.build(token, parentContext);
+        return ValueExpressionBuilder.buildFromName(token, parentContext);
       case ObjectAccessToken _:
-        return ValueExpressionBuilder.buildAccessedValue(
-            token,
-            token.objectName,
-            token.accessedName,
-            token.subaccessedNames,
-            parentContext);
+        return ValueExpressionBuilder.buildFromAccessedValue(
+            token, parentContext);
     }
   }
 
@@ -97,9 +97,11 @@ class ExpressionBuilder {
         return ConstExpressionBuilder.build(
             Location.fromToken(first), expr.arguments, parentContext);
       case SumTypeToken _:
-        return SumTypeExpressionBuilder.build(first, expr.arguments, parentContext);
+        return SumTypeExpressionBuilder.build(
+            first, expr.arguments, parentContext);
       case StructTypeToken _:
-        return StructTypeExpressionBuilder.build(first, expr.arguments, parentContext);
+        return StructTypeExpressionBuilder.build(
+            first, expr.arguments, parentContext);
       case IfToken _:
         return IfExpressionBuilder.build(first, expr.arguments, parentContext);
       case CondToken _:

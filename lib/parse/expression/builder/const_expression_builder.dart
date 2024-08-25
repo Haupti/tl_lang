@@ -1,5 +1,5 @@
 import 'package:tll/parse/collect/token_group.dart';
-import 'package:tll/parse/expression/builder/convert/expression_converter.dart';
+import 'package:tll/parse/expression/builder/utils/token_utils.dart';
 import 'package:tll/parse/expression/builder/verify/type_verifyier.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
@@ -15,15 +15,15 @@ class ConstExpressionBuilder {
       throw ParserException.at(
           "expected a type, name and value argument", start);
     }
-    SingleTokenGroup typeToken = TokenGroupConverter.toSingleOrThrow(
+    SingleTokenGroup typeToken = TokenUtils.toSingleOrThrow(
         arguments[0], "expected a type here");
-    SingleTokenGroup nameToken = TokenGroupConverter.toSingleOrThrow(
+    SingleTokenGroup nameToken = TokenUtils.toSingleOrThrow(
         arguments[1], "expected a name here");
 
     NameToken typeName =
-        TokenGroupConverter.toNameOrThrow(typeToken, "expected a type here");
+        TokenUtils.toNameOrThrow(typeToken, "expected a type here");
     NameToken name =
-        TokenGroupConverter.toNameOrThrow(nameToken, "expected a name here");
+        TokenUtils.toNameOrThrow(nameToken, "expected a name here");
 
     TLLType type = TypeVerifier.toTypeOrThrow(typeName, parentContext);
 
@@ -46,3 +46,4 @@ class ConstExpressionBuilder {
     return ConstantDefinitionExpr(name.value, type, valueExpression, start);
   }
 }
+
