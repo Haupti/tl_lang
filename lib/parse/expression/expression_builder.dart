@@ -7,7 +7,7 @@ import 'package:tll/parse/expression/builder/if_expression_builder.dart';
 import 'package:tll/parse/expression/builder/let_expression_builder.dart';
 import 'package:tll/parse/expression/builder/struct_type_expression_builder.dart';
 import 'package:tll/parse/expression/builder/sum_type_expression_builder.dart';
-import 'package:tll/parse/expression/builder/value_use_expression_builder.dart';
+import 'package:tll/parse/expression/builder/value_expression_builder.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder_context.dart';
 import 'package:tll/parse/expression/location.dart';
@@ -67,9 +67,9 @@ class ExpressionBuilder {
       case StringToken _:
       case BoolToken _:
       case NameToken _:
-        return ValueUseExpressionBuilder.build(token, parentContext);
+        return ValueExpressionBuilder.build(token, parentContext);
       case ObjectAccessToken _:
-        return ValueUseExpressionBuilder.buildAccessedValue(
+        return ValueExpressionBuilder.buildAccessedValue(
             token,
             token.objectName,
             token.accessedName,
@@ -101,7 +101,7 @@ class ExpressionBuilder {
       case StructTypeToken _:
         return StructTypeExpressionBuilder.build(first, expr.arguments, parentContext);
       case IfToken _:
-        return IfExpressionBuilder.build(expr.arguments, parentContext);
+        return IfExpressionBuilder.build(first, expr.arguments, parentContext);
       case CondToken _:
         return CondExpressionBuilder.build(expr.arguments, parentContext);
       case NameToken _:

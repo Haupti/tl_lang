@@ -1,6 +1,6 @@
 import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
-import 'package:tll/parse/expression/type.dart';
+import 'package:tll/parse/type/type.dart';
 
 sealed class Expression {
   TLLType type;
@@ -54,9 +54,8 @@ class StructTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
 
   @override
   TLLType type;
-  String name;
 
-  StructTypeDefinitionExpr(this.name, this.type, this.location);
+  StructTypeDefinitionExpr(this.type, this.location);
 }
 
 class SumTypeDefinitionExpr implements Expression, TypeDefinitionExpr {
@@ -107,4 +106,18 @@ class FunctionCallExpression implements Expression {
   set type(TLLType _) {
     throw Exception("do not call this");
   }
+}
+
+class IfExpression implements Expression {
+  @override
+  Location location;
+
+  @override
+  TLLType type;
+  Expression conditionExpression;
+  Expression thenExpression;
+  Expression elseExpression;
+
+  IfExpression(this.conditionExpression, this.thenExpression,
+      this.elseExpression, this.type, this.location);
 }

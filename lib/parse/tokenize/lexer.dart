@@ -18,8 +18,6 @@ class Lexer {
         return IfToken(row, col);
       case "cond":
         return ConstToken(row, col);
-      case "print":
-        return PrintToken(row, col);
       default:
         return NameToken(word, row, col);
     }

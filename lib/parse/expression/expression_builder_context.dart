@@ -1,7 +1,7 @@
 import 'package:tll/parse/expression/expression_container.dart';
-import 'package:tll/parse/expression/type.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
+import 'package:tll/parse/type/type.dart';
 
 sealed class ScopeContext {
   bool hasNamedValue(String value);

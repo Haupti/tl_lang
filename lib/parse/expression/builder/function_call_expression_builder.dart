@@ -3,10 +3,10 @@ import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
 import 'package:tll/parse/expression/expression_builder_context.dart';
 import 'package:tll/parse/expression/location.dart';
-import 'package:tll/parse/expression/type.dart';
-import 'package:tll/parse/expression/type_mismatch_exception.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
+import 'package:tll/parse/type/type.dart';
+import 'package:tll/parse/type/type_mismatch_exception.dart';
 
 class FunctionCallExpressionBuilder {
   static Expression build(NameToken functionName, List<TokenGroup> arguments,
@@ -28,8 +28,7 @@ class FunctionCallExpressionBuilder {
           argumentExpressions.add(_typechecked(
               argumentExpression, type.argumentTypes[i], arguments[i]));
         default:
-          throw ParserException.atTokenGroup(
-              "this is not allowed here", arguments[i]);
+          throw ParserException.atTokenGroup("unexpected token", arguments[i]);
       }
     }
 
