@@ -15,4 +15,7 @@ class SmartMap<T> {
   T? get(String name) {
     return storage[name];
   }
+
+  SmartMap.init(Map<String, T> map): storage = map;
+  SmartMap();
 }

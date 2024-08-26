@@ -1,4 +1,5 @@
 import 'package:tll/parse/collect/token_group.dart';
+import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';
 
@@ -29,6 +30,11 @@ class TLLTypeError implements Exception {
       TLLType actualType, String expected, Token mismatchingToken)
       : message =
             "TYPE-ERROR (${mismatchingToken.row}, ${mismatchingToken.col}): expected a $expected here, but got a $actualType";
+
+  TLLTypeError.expectedATypeAtLocation(
+      TLLType actualType, String expected, Location location)
+      : message =
+            "TYPE-ERROR (${location.row}, ${location.col}): expected a $expected here, but got a $actualType";
 
   TLLTypeError.withMessage(String message, Token mismatchingToken)
       : message =

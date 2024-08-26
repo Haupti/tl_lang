@@ -70,35 +70,52 @@ sealed class TLLType {
     }
   }
 
-  bool matches(TLLType type) {
-    switch (type) {
-      case TLLFunctionType _:
-        TLLType me = this;
-        if (me is TLLFunctionType && me.returnType.matches(type.returnType)) {
-          if (me.argumentTypes.length != type.argumentTypes.length) {
-            return false;
-          }
-          for (int i = 0; i < me.argumentTypes.length; i++) {
-            if (!me.argumentTypes[i].matches(type.argumentTypes[i])) {
-              return false;
-            }
-          }
-        } else {
-          return false;
-        }
-        return true;
-      default:
-        throw Exception("not yet implemented");
-    }
-  }
-
   bool suffices(TLLType argumentTyp) {
-    // TODO: check if the current type fulfils the criteria to be the argument type
     throw Exception("not yet implemented");
+    /*
+       when does what suffice:
+         * exact matches always suffice
+         * value types suffice their corresponding general type BUT NOT VICE VERSA
+         * value types suffice sum types that contain at least one type which they suffice
+         * sum types suffice other sum types if all their possible options are in the others possible options OR suffice them:
+            e.g. : (type "hi" int "mom") suffices (type string int) and (type "hi" "mom" "dad" int)
+         * struct types only suffice on excat match
+         * function types suffice if their arguments are equal or more general and their return type is equal or more specific than the others 
+       */
   }
 
   bool isBool() {
     return this is TLLBoolType || this is TLLBoolValueType;
+  }
+
+  String show() {
+    TLLType type = this;
+    switch (type) {
+      case TLLBoolValueType _:
+        return '${type.value}';
+      case TLLBoolType _:
+        return 'bool';
+      case TLLIntValueType _:
+        return '${type.value}';
+      case TLLIntType _:
+        return 'int';
+      case TLLFloatValueType _:
+        return '${type.value}';
+      case TLLFloatType _:
+        return 'float';
+      case TLLStringValueType _:
+        return type.value;
+      case TLLStringType _:
+        return 'string';
+      case TLLFunctionType _:
+        return '(${type.argumentTypes.map((it) => it.show()).join(" ")} ${type.returnType.show()})';
+      case TLLStructType _:
+        return '(struct ${type.name} ${type.fields.keys.map((it) => "${type.fields[it]!.show()} $it").join(" ")})';
+      case TLLSumType _:
+        return '(type ${type.name} ${type.allowedTypes.map((it) => it.show()).join(" ")})';
+      case TLLAnonymousSumType _:
+        return '(type ${type.allowedTypes.map((it) => it.show()).join(" ")})';
+    }
   }
 }
 

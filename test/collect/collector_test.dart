@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:tll/parse/collect/collector.dart';
 import 'package:tll/parse/collect/token_group.dart';
 
-import '../testextension/token_group_extensions.dart';
+import '../testutils/token_group_extensions.dart';
 
 void main() {
   test('finds groups', () {

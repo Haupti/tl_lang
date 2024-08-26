@@ -4,10 +4,15 @@ import 'package:tll/parse/expression/scope.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';
+import 'package:tll/parse/type/type_mismatch_exception.dart';
 
 class TypeVerifier {
-  static void isExpectedTypedValueOrThrow(TLLType type, Expression valueExpression, Location location) {
-    throw Exception("not yet implemented");
+  static void isExpectedTypedValueOrThrow(
+      TLLType type, Expression valueExpression, Location location) {
+    if (!valueExpression.type.equals(type)) {
+      throw TLLTypeError.expectedATypeAtLocation(
+          valueExpression.type, type.show(), location);
+    }
   }
 
   static TLLType toTypeOrThrow(Token token, ScopeContext context) {

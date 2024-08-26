@@ -10,7 +10,7 @@ import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';
 
 class LetExpressionBuilder {
-  static Expression build(
+  static VariableDefinitionExpr build(
       Location start, List<TokenGroup> arguments, ScopeContext parentContext) {
     if (arguments.length != 3) {
       throw ParserException.at(
