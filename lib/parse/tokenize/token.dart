@@ -13,6 +13,32 @@ sealed class Token {
         return false;
     }
   }
+
+  static bool isKeyword(Token token) {
+    switch (token) {
+      case IfToken _:
+      case CondToken _:
+      case SumTypeToken _:
+      case StructTypeToken _:
+      case DefunToken _:
+      case LetToken _:
+      case ConstToken _:
+        return true;
+      case ObjectAccessToken _:
+      case NameToken _:
+      case IntToken _:
+      case FloatToken _:
+      case StringToken _:
+      case BoolToken _:
+      case T1BracesOpenToken _:
+      case T2BracesOpenToken _:
+      case T3BracesOpenToken _:
+      case T1BracesCloseToken _:
+      case T2BracesCloseToken _:
+      case T3BracesCloseToken _:
+        return false;
+    }
+  }
 }
 
 class T1BracesOpenToken implements Token {

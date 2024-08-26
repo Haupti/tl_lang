@@ -78,7 +78,8 @@ class AccessedValueReferenceExpression implements Expression {
   @override
   TLLType type;
 
-  AccessedValueReferenceExpression(this.objectName, this.accessedField, this.subaccessedFields, this.type, this.location);
+  AccessedValueReferenceExpression(this.objectName, this.accessedField,
+      this.subaccessedFields, this.type, this.location);
 }
 
 class ValueReferenceExpression implements Expression {
@@ -133,4 +134,15 @@ class IfExpression implements Expression {
 
   IfExpression(this.conditionExpression, this.thenExpression,
       this.elseExpression, this.type, this.location);
+}
+
+class CondExpression implements Expression {
+  @override
+  Location location;
+
+  @override
+  TLLType type;
+  List<(Expression, Expression)> condResultPairs;
+
+  CondExpression(this.condResultPairs, this.type, this.location);
 }

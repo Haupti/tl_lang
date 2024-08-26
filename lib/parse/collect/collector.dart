@@ -16,13 +16,14 @@ class Collector {
     for (int i = 0; i < tokens.length; i++) {
       token = tokens[i];
       if (Token.isBracketOpen(token)) {
-        var (expressionGroup, rest) = _findFirstExpressionAndRest(tokens.sublist(i));
+        var (expressionGroup, rest) =
+            _findFirstExpressionAndRest(tokens.sublist(i));
         if (expressionGroup == null) {
           throw ParserException.atToken("unexpected empty expression", token);
         }
         foundGroups.add(expressionGroup);
         foundGroups.addAll(_findGroups(rest));
-        break; 
+        break;
       } else {
         foundGroups.add(SingleTokenGroup(token));
       }
@@ -39,7 +40,9 @@ class Collector {
     }
 
     Token baseToken = innerTokens[0];
-    if (baseToken is! ObjectAccessToken && baseToken is! NameToken) {
+    if (baseToken is! ObjectAccessToken &&
+        baseToken is! NameToken &&
+        !Token.isKeyword(baseToken)) {
       throw ParserException.atToken("unexpected invalid token", baseToken);
     }
     List<TokenGroup> groups = _findGroups(innerTokens.sublist(1));
