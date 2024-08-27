@@ -8,19 +8,6 @@ import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';
 
 class ValueExpressionBuilder {
-  static Expression build(Token token, ScopeContext parentContext) {
-    throw Exception("not yet implemented");
-  }
-
-  static Expression buildAccessedValue(
-      ObjectAccessToken token,
-      String objectName,
-      String accessedName,
-      List<String> subaccessedNames,
-      ScopeContext parentContext) {
-    throw Exception("not yet implemented");
-  }
-
   static Expression buildInt(IntToken token, ScopeContext parentContext) {
     return PrimitiveValueExpression(IntValue(token.value), TLLIntType(), Location.fromToken(token));
   }
