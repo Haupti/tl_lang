@@ -1,65 +1,9 @@
 import 'package:tll/parse/type/type_comparator.dart';
 
 sealed class TLLType {
-  bool _typesEqual(List<TLLType> typesA, List<TLLType> typesB) {
-    if (typesA.length != typesB.length) {
-      return false;
-    }
-    for (int i = 0; i < typesB.length; i++) {
-      if (typesA[i] != typesB[i]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
+  // TODO maybe this should not be used. use suffices instead. probably always...
   bool equals(TLLType other) {
-    TLLType me = this;
-    switch (other) {
-      case TLLBoolType _:
-        return this is TLLBoolType;
-      case TLLIntType _:
-        return this is TLLIntType;
-      case TLLFloatType _:
-        return this is TLLFloatType;
-      case TLLStringType _:
-        return this is TLLStringType;
-      case TLLIntValueType _:
-        return me is TLLIntValueType && me.value == other.value;
-      case TLLFloatValueType _:
-        return me is TLLFloatValueType && me.value == other.value;
-      case TLLStringValueType _:
-        return me is TLLStringValueType && me.value == other.value;
-      case TLLBoolValueType _:
-        return me is TLLBoolValueType && me.value == other.value;
-      case TLLFunctionType _:
-        if (me is! TLLFunctionType) {
-          return false;
-        }
-        if (other.returnType != me.returnType) {
-          return false;
-        }
-        return _typesEqual(other.argumentTypes, me.argumentTypes);
-      case TLLStructType _:
-        return me is TLLStructType &&
-            TypeComparator.structTypeEquals(me, other);
-      case TLLAnonymousSumType _:
-        if (me is TLLAnonymousSumType) {
-          return _typesEqual(other.allowedTypes, me.allowedTypes);
-        }
-        if (me is TLLSumType) {
-          return _typesEqual(other.allowedTypes, me.allowedTypes);
-        }
-        return false;
-      case TLLSumType _:
-        if (me is TLLAnonymousSumType) {
-          return _typesEqual(other.allowedTypes, me.allowedTypes);
-        }
-        if (me is TLLSumType) {
-          return _typesEqual(other.allowedTypes, me.allowedTypes);
-        }
-        return false;
-    }
+    return TypeComparator.typesIdentical(this, other);
   }
 
   bool suffices(TLLType argumentType) {
