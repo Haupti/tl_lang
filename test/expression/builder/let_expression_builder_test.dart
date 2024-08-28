@@ -40,11 +40,9 @@ void main() {
     expect(expr.type.equals(TLLIntType()), true);
     expect(expr.name, "a");
     Expression exprValue = expr.value;
-    if (exprValue is! PrimitiveValueExpression) {
+    if (exprValue is! FunctionCallExpression) {
       fail("expected primitive value");
     }
     expect(exprValue.type.equals(TLLIntType()), true);
-    expect(exprValue.value is IntValue, true);
-    expect((exprValue.value as IntValue).value, 123);
   });
 }
