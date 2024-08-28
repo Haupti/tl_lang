@@ -28,7 +28,9 @@ class IfExpressionBuilder {
         ExpressionBuilder.buildOne(arguments[1], parentContext);
 
     TLLType type;
-    if (thenExpr.type.equals(elseExpr.type)) {
+    if (thenExpr.type.suffices(elseExpr.type)) {
+      type = elseExpr.type;
+    }else if (elseExpr.type.suffices(thenExpr.type)){
       type = thenExpr.type;
     } else {
       type = TLLAnonymousSumType([thenExpr.type, elseExpr.type]);

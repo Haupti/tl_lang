@@ -1,3 +1,4 @@
+import 'package:tll/parse/type/type_checker.dart';
 import 'package:tll/parse/type/type_comparator.dart';
 
 sealed class TLLType {
@@ -7,56 +8,7 @@ sealed class TLLType {
   }
 
   bool suffices(TLLType argumentType) {
-    /*
-       when does what suffice:
-         X exact matches always suffice
-         _ value types suffice their corresponding general type BUT NOT VICE VERSA
-         _ value types suffice sum types that contain at least one type which they suffice
-         _ sum types suffice other sum types if all their possible options are in the others possible options OR suffice them:
-            e.g. : (type "hi" int "mom") suffices (type string int) and (type "hi" "mom" "dad" int)
-         _ struct types only suffice on excat match
-         _ function types suffice if their arguments are equal or more general and their return type is equal or more specific than the others 
-       */
-    TLLType me = this;
-    switch (me) {
-      case TLLBoolType _:
-        return argumentType is TLLBoolType || _iSufficeSumType(argumentType);
-      case TLLIntType _:
-        return argumentType is TLLIntType || _iSufficeSumType(argumentType);
-      case TLLFloatType _:
-        return argumentType is TLLFloatType || _iSufficeSumType(argumentType);
-      case TLLStringType _:
-        return argumentType is TLLStringType || _iSufficeSumType(argumentType);
-      case TLLIntValueType _:
-        return argumentType is TLLIntType ||
-            (argumentType is TLLIntValueType &&
-                me.value == argumentType.value) ||
-            _iSufficeSumType(argumentType);
-      case TLLFloatValueType _:
-        return argumentType is TLLFloatType ||
-            (argumentType is TLLFloatValueType &&
-                me.value == argumentType.value) ||
-            _iSufficeSumType(argumentType);
-      case TLLStringValueType _:
-        return argumentType is TLLStringType ||
-            (argumentType is TLLStringValueType &&
-                me.value == argumentType.value) ||
-            _iSufficeSumType(argumentType);
-      case TLLBoolValueType _:
-        return argumentType is TLLBoolType ||
-            (argumentType is TLLBoolValueType &&
-                me.value == argumentType.value) ||
-            _iSufficeSumType(argumentType);
-      case TLLFunctionType _:
-        throw Exception("L");
-      case TLLStructType _:
-        return argumentType is TLLStructType &&
-            TypeComparator.structTypeEquals(argumentType, me);
-      case TLLAnonymousSumType _:
-        return me.allowedTypes.every((it) => it.suffices(argumentType));
-      case TLLSumType _:
-        return me.allowedTypes.every((it) => it.suffices(argumentType));
-    }
+    return TypeChecker.typeASufficesB(this, argumentType);
   }
 
   bool _iSufficeSumType(TLLType argumentType) {

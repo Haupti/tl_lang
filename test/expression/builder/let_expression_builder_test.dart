@@ -16,13 +16,13 @@ void main() {
         Location(1, 2), [nameT("int"), nameT("a"), intT(123)], mod);
     expect(expr.location.row, 1);
     expect(expr.location.col, 2);
-    expect(expr.type.equals(TLLIntType()), true);
+    expect(expr.type is TLLIntType, true);
     expect(expr.name, "a");
     Expression exprValue = expr.value;
     if (exprValue is! PrimitiveValueExpression) {
       fail("expected primitive value");
     }
-    expect(exprValue.type.equals(TLLIntType()), true);
+    expect(exprValue.type is TLLIntType, true);
     expect(exprValue.value is IntValue, true);
     expect((exprValue.value as IntValue).value, 123);
   });
@@ -37,12 +37,12 @@ void main() {
         Location(1, 2), [nameT("int"), nameT("a"), valExpr], mod);
     expect(expr.location.row, 1);
     expect(expr.location.col, 2);
-    expect(expr.type.equals(TLLIntType()), true);
+    expect(expr.type is TLLIntType, true);
     expect(expr.name, "a");
     Expression exprValue = expr.value;
     if (exprValue is! FunctionCallExpression) {
       fail("expected primitive value");
     }
-    expect(exprValue.type.equals(TLLIntType()), true);
+    expect(exprValue.type is TLLIntType, true);
   });
 }
