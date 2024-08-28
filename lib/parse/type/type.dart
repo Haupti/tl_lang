@@ -1,30 +1,9 @@
 import 'package:tll/parse/type/type_checker.dart';
-import 'package:tll/parse/type/type_comparator.dart';
 
 sealed class TLLType {
-  // TODO maybe this should not be used. use suffices instead. probably always...
-  bool equals(TLLType other) {
-    return TypeComparator.typesIdentical(this, other);
-  }
 
   bool suffices(TLLType argumentType) {
     return TypeChecker.typeASufficesB(this, argumentType);
-  }
-
-  bool _iSufficeSumType(TLLType argumentType) {
-    return (argumentType is TLLSumType &&
-            _iSufficeOneOf(argumentType.allowedTypes)) ||
-        (argumentType is TLLAnonymousSumType &&
-            _iSufficeOneOf(argumentType.allowedTypes));
-  }
-
-  bool _iSufficeOneOf(List<TLLType> types) {
-    for (final t in types) {
-      if (suffices(t)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   bool isBool() {

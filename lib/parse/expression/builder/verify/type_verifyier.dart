@@ -9,7 +9,7 @@ import 'package:tll/parse/type/type_mismatch_exception.dart';
 class TypeVerifier {
   static void isExpectedTypedValueOrThrow(
       TLLType type, Expression valueExpression, Location location) {
-    if (!valueExpression.type.equals(type)) {
+    if (!valueExpression.type.suffices(type)) {
       throw TLLTypeError.expectedATypeAtLocation(
           valueExpression.type, type.show(), location);
     }
