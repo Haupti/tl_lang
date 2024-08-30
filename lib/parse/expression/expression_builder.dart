@@ -83,7 +83,7 @@ class ExpressionBuilder {
     Token first = expr.first.token;
     switch (first) {
       case DefunToken _:
-        return DefunExpressionBuilder.build(expr.arguments, parentContext);
+        return DefunExpressionBuilder.build(first, expr.arguments, parentContext);
       case LetToken _:
         return LetExpressionBuilder.build(
             Location.fromToken(first), expr.arguments, parentContext);
