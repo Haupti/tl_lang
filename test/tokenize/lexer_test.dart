@@ -41,4 +41,12 @@ void main() {
         ['(','keyword:defun','(',')','name:fnname', '(', 'name:print', 'float:123.1',')',')']);
     expect(pos, "(0/0)(0/1)(0/7)(0/8)(0/10)(1/1)(1/2)(1/8)(1/13)(1/14)");
   });
+  test('finds struct tokens',(){
+    List<Token> tokens =
+        Lexer.tokenize('(struct Person string name int age)');
+    String pos = tokens.map((it) => "(${it.row}/${it.col})").join("");
+
+    expect(tokens[1] is StructTypeToken, true);
+    expect(pos, "(0/0)(0/1)(0/8)(0/15)(0/22)(0/27)(0/31)(0/34)");
+  });
 }
