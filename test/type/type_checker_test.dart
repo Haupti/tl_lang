@@ -68,4 +68,16 @@ void main() {
             TLLStructType("b", {"hi": string(), "mom": stringV("hi")})),
         true);
   });
+  test("sum type does not suffice int type", () {
+    expect(check(asum([stringV("hi"), intV(1)]), ind()), false);
+  });
+  test("function type suffice other function type", () {
+    expect(
+        check(
+            TLLFunctionType(sum([intV(5), intV(6)]), [ind()]),
+            TLLFunctionType(ind(), [
+              sum([intV(5), intV(6), intV(7)])
+            ])),
+        true);
+  });
 }
