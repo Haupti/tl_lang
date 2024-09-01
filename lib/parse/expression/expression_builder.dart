@@ -25,6 +25,11 @@ class ExpressionBuilder {
     return groups.map((it) => buildOne(it, context)).toList();
   }
 
+  static List<Expression> buildAllInScope(
+      List<TokenGroup> groups, ScopeContext context) {
+    return groups.map((it) => buildOne(it, context)).toList();
+  }
+
   static Expression _buildOneTopLevel(
       TokenGroup group, ScopeContext parentContext) {
     switch (group) {
@@ -83,7 +88,8 @@ class ExpressionBuilder {
     Token first = expr.first.token;
     switch (first) {
       case DefunToken _:
-        return DefunExpressionBuilder.build(first, expr.arguments, parentContext);
+        return DefunExpressionBuilder.build(
+            first, expr.arguments, parentContext);
       case LetToken _:
         return LetExpressionBuilder.build(
             Location.fromToken(first), expr.arguments, parentContext);
@@ -99,7 +105,8 @@ class ExpressionBuilder {
       case IfToken _:
         return IfExpressionBuilder.build(first, expr.arguments, parentContext);
       case CondToken _:
-        return CondExpressionBuilder.build(first, expr.arguments, parentContext);
+        return CondExpressionBuilder.build(
+            first, expr.arguments, parentContext);
       case NameToken _:
         return FunctionCallExpressionBuilder.build(
             first, expr.arguments, parentContext);

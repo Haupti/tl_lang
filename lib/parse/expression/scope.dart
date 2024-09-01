@@ -51,7 +51,7 @@ class ModuleScopeContext implements ScopeContext {
     return constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.get(name);
+        Base.getType(name);
   }
 
   @override
@@ -65,7 +65,7 @@ class ModuleScopeContext implements ScopeContext {
 
   @override
   TLLType? findType(String name) {
-    return Base.get(name) ?? types.get(name);
+    return Base.getType(name) ?? types.get(name);
   }
 
   @override
@@ -80,6 +80,7 @@ class ModuleScopeContext implements ScopeContext {
 
 class FunctionScopeContext implements ScopeContext {
   SmartMap<TLLType> constants = SmartMap();
+  SmartMap<TLLType> params = SmartMap();
   SmartMap<TLLType> variables = SmartMap();
   SmartMap<TLLType> functions = SmartMap();
   SmartMap<TLLType> types = SmartMap();
@@ -88,7 +89,8 @@ class FunctionScopeContext implements ScopeContext {
   FunctionScopeContext(this.parentScope);
 
   bool _isFreeToDefine(String name) {
-    return !constants.has(name) &&
+    return !params.has(name) &&
+        !constants.has(name) &&
         !variables.has(name) &&
         !functions.has(name) &&
         !types.has(name) &&
@@ -116,10 +118,11 @@ class FunctionScopeContext implements ScopeContext {
 
   @override
   TLLType? getTypeOf(String name) {
-    return constants.get(name) ??
+    return params.get(name) ??
+        constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.get(name) ??
+        Base.getType(name) ??
         parentScope.getTypeOf(name);
   }
 
@@ -144,6 +147,14 @@ class FunctionScopeContext implements ScopeContext {
 
   @override
   TLLType? findType(String name) {
-    return Base.get(name) ?? types.get(name) ?? parentScope.findType(name);
+    return Base.getType(name) ?? types.get(name) ?? parentScope.findType(name);
+  }
+
+  void addParam(NameToken argumentName, TLLType argumentType) {
+    if (params.get(argumentName.value) != null) {
+      throw ParserException.atToken(
+          "a parameter with this name already exists", argumentName);
+    }
+    params.add(argumentName.value, argumentType);
   }
 }

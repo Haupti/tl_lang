@@ -38,7 +38,22 @@ class FunctionDefinitionExpr implements Expression {
   @override
   TLLType type;
 
-  FunctionDefinitionExpr(this.type, this.location);
+  String name;
+  List<String> argumentNames;
+  List<Expression> body;
+  TLLFunctionType get functionType => _toType();
+
+  TLLFunctionType _toType() {
+    TLLType myType = type;
+    if (myType is TLLFunctionType) {
+      return myType;
+    } else {
+      throw Exception("BUG: this should not happen");
+    }
+  }
+
+  FunctionDefinitionExpr(
+      this.type, this.name, this.argumentNames, this.body, this.location);
 }
 
 sealed class TypeDefinitionExpr implements Expression {

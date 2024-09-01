@@ -40,6 +40,9 @@ class TLLTypeError implements Exception {
       : message =
             "TYPE-ERROR at (${mismatchingToken.row}, ${mismatchingToken.col}): $message";
 
+  TLLTypeError.withMessageAt(String message, Location location)
+      : message = "TYPE-ERROR at (${location.row}, ${location.col}): $message";
+
   static Token _toToken(TokenGroup group) {
     switch (group) {
       case ExpressionTokenGroup _:

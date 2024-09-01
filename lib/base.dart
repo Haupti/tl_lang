@@ -12,7 +12,7 @@ class Base {
     return _baseTypes.get(name) != null;
   }
 
-  static TLLType? get(String name) {
+  static TLLType? getType(String name) {
     return _baseTypes.get(name);
   }
 }
