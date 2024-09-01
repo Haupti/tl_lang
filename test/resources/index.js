@@ -1,2 +1,11 @@
-const a = 5;
-const b = true;
+
+function fizzbuzz(num){
+  if(true){
+    '"num"'
+  }
+  if(false){
+    '"no"'
+  }
+}
+
+console.log(fizzbuzz(5))

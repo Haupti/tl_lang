@@ -33,8 +33,8 @@ class FunctionCallExpressionBuilder {
       }
     }
 
-    return FunctionCallExpression(
-        type.returnType, argumentExpressions, Location.fromToken(functionName));
+    return FunctionCallExpression(type.returnType, functionName.value, [],
+        argumentExpressions, Location.fromToken(functionName));
   }
 
   static Expression _typechecked(
@@ -58,10 +58,10 @@ class FunctionCallExpressionBuilder {
     return type;
   }
 
-
   static Expression buildAccessedCall(ObjectAccessToken fullToken,
       List<TokenGroup> arguments, ScopeContext parentContext) {
-    TLLType functionType = TokenUtils.toTypeOfAccessedValue(fullToken, parentContext);
+    TLLType functionType =
+        TokenUtils.toTypeOfAccessedValue(fullToken, parentContext);
     if (functionType is! TLLFunctionType) {
       throw TLLTypeError.expectedAType(functionType, "function", fullToken);
     }
@@ -87,7 +87,9 @@ class FunctionCallExpressionBuilder {
       }
     }
 
-    return FunctionCallExpression(functionType.returnType, argumentExpressions,
-        Location.fromToken(fullToken));
+    List<String> accessedFields = [fullToken.accessedName];
+    accessedFields.addAll(fullToken.subaccessedNames);
+    return FunctionCallExpression(functionType.returnType, fullToken.objectName,
+        accessedFields, argumentExpressions, Location.fromToken(fullToken));
   }
 }

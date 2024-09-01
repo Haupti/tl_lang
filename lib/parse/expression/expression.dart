@@ -125,11 +125,13 @@ class FunctionCallExpression implements Expression {
 
   TLLType returnType;
 
+  String name;
+  List<String> accessedNames;
   List<Expression> arguments;
   @override
   TLLType get type => returnType;
 
-  FunctionCallExpression(this.returnType, this.arguments, this.location);
+  FunctionCallExpression(this.returnType, this.name, this.accessedNames, this.arguments, this.location);
 
   @override
   set type(TLLType _) {

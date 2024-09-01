@@ -17,7 +17,7 @@ class Lexer {
       case "if":
         return IfToken(row, col);
       case "cond":
-        return ConstToken(row, col);
+        return CondToken(row, col);
       default:
         return NameToken(word, row, col);
     }

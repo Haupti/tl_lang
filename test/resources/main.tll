@@ -1,2 +1,6 @@
-(const int a 5)
-(const bool b true)
+(defun (int string) (fizzbuzz num)
+  (cond 
+    true "num"
+    false "no"
+  )
+)
