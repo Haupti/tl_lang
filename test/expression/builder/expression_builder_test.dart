@@ -25,4 +25,13 @@ void main() {
     expect(structType.fields.keys.length, 1);
     expect(structType.fields["age"] is TLLIntType, true);
   });
+
+  test("build function definition expression for correct code", () {
+    String code = """(defun (int (int float)) (times-two a) (* a 2))""";
+    List<TokenGroup> groups = Collector.findExpressions(code);
+    List<Expression> expressions = ExpressionBuilder.buildAllTopLevel(groups);
+    expect(expressions.length, 1);
+    var expression = expressions[0];
+    expect(expression is FunctionDefinitionExpr, true);
+  });
 }

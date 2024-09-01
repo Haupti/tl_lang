@@ -51,7 +51,7 @@ class ModuleScopeContext implements ScopeContext {
     return constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.getType(name);
+        Base.getTypeOf(name);
   }
 
   @override
@@ -122,7 +122,7 @@ class FunctionScopeContext implements ScopeContext {
         constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.getType(name) ??
+        Base.getTypeOf(name) ??
         parentScope.getTypeOf(name);
   }
 

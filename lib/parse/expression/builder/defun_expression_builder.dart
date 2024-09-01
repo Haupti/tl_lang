@@ -32,6 +32,8 @@ class DefunExpressionBuilder {
 
     FunctionScopeContext myContext = FunctionScopeContext(parentContext);
     if (argumentNames.length != argumentTypes.length) {
+      print(argumentNames.map((it) => it.value));
+      print(argumentTypes);
       throw ParserException.at("argument types and arguments do not add up",
           Location(arguments[1].row, arguments[1].col));
     }
@@ -70,8 +72,7 @@ class DefunExpressionBuilder {
     }
 
     List<NameToken> argumentNames = [];
-    List<TokenGroup> argumentGroups = callSignature.arguments;
-    for (final argument in argumentGroups) {
+    for (final argument in callSignature.arguments) {
       if (argument is! SingleTokenGroup) {
         throw ParserException.at(
             "unexpected expression", Location(argument.row, argument.col));
@@ -93,7 +94,7 @@ class DefunExpressionBuilder {
 
     if (!body.last.type.suffices(returnType)) {
       throw TLLTypeError.withMessageAt(
-          "type ${body.last.type.show} does not suffice expected ${returnType.show}",
+          "type ${body.last.type.show()} does not suffice expected ${returnType.show()}",
           body.last.location);
     }
     return body;
@@ -102,6 +103,10 @@ class DefunExpressionBuilder {
   static List<TLLType> _findArgumentTypes(
       ExpressionTokenGroup typesGroup, ScopeContext context) {
     List<TLLType> argumentTypes = [];
+    if (typesGroup.arguments.isEmpty) {
+      return [];
+    }
+    argumentTypes.add(_findTypeOrThrow(typesGroup.first, context));
     for (int i = 0; i < typesGroup.arguments.length - 1; i++) {
       argumentTypes.add(_findTypeOrThrow(typesGroup.arguments[i], context));
     }
