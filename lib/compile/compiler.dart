@@ -8,8 +8,7 @@ class Compiler {
     for (int i = 0; i < expressions.length; i++) {
       Expression expression = expressions[i];
       jsCode += "\n";
-      bool isReturned = i == expressions.length - 1;
-      jsCode += exprToJS(expression, isReturned);
+      jsCode += exprToJS(expression, false);
     }
     return jsCode;
   }
@@ -22,7 +21,7 @@ class Compiler {
         }
         return "const ${expression.name} = ${exprToJS(expression.value, false)};";
       case PrimitiveValueExpression _:
-        return primitiveToJS(expression);
+        return primitiveToJS(expression, isReturned);
       case VariableDefinitionExpr _:
         if (isReturned) {
           throw CompilerException.atExpression("expected a value", expression);
@@ -42,67 +41,81 @@ class Compiler {
       case ValueReferenceExpression _:
         return expression.name;
       case FunctionCallExpression _:
-        return functionCallToJS(expression);
+        return functionCallToJS(expression, isReturned);
       case IfExpression _:
-        return ifToJS(expression);
+        return ifToJS(expression, isReturned);
       case CondExpression _:
-        return condToJS(expression);
+        return condToJS(expression, isReturned);
     }
   }
 
   static String condToJS(CondExpression cond, bool isReturned) {
+    // TODO check if all possible conditions are matched (maybe do this while parsing and save an 'isExhaustive' flag in the cond expression
     String jsCode = "";
     for (final (cond, res) in cond.condResultPairs) {
-      jsCode += "if(${exprToJS(cond, isReturned)}){\n";
-      jsCode += "return ${exprToJS(res, false)}";
+      jsCode += "if(${exprToJS(cond, false)}){\n";
+      jsCode += "${toReturn(isReturned)}${exprToJS(res, false)}";
       jsCode += "}\n";
     }
     jsCode += "return null\n";
     return jsCode;
   }
 
-  static String ifToJS(IfExpression expr) {
-    String jsCode = "if(${exprToJS(expr.conditionExpression)}){\n";
-    jsCode += exprToJS(expr.thenExpression);
+  static String ifToJS(IfExpression expr, bool isReturned) {
+    String jsCode = "if(${exprToJS(expr.conditionExpression, false)}){\n";
+    jsCode += toReturn(isReturned) + exprToJS(expr.thenExpression, false);
     jsCode += "} else {\n";
-    jsCode += exprToJS(expr.elseExpression);
+    jsCode += toReturn(isReturned) + exprToJS(expr.elseExpression, false);
     jsCode += "}\n";
     return jsCode;
   }
 
-  static String functionCallToJS(FunctionCallExpression func) {
+  static String toReturn(bool isReturned) {
+    if (isReturned) {
+      return "return ";
+    }
+    return "";
+  }
+
+  static String functionCallToJS(FunctionCallExpression func, bool isReturned) {
     String accessedFields = func.accessedNames.join(".");
     if (accessedFields != "") {
       accessedFields = ".$accessedFields";
     }
     String jsCode =
-        "${func.name}$accessedFields(${func.arguments.map((it) => exprToJS(it)).join(",")})";
+        "${toReturn(isReturned)}${func.name}$accessedFields(${func.arguments.map((it) => exprToJS(it, false)).join(",")})";
     return jsCode;
   }
 
   static String functionDefToJS(FunctionDefinitionExpr func) {
     String jsCode = "function ${func.name}(${func.argumentNames.join(",")}){\n";
-    for (final expr in func.body) {
-      jsCode += exprToJS(expr);
+    int length = func.body.length;
+    for (int i = 0; i < length; i++) {
+      final expr = func.body[i];
+      if (i == length - 1) {
+        jsCode += exprToJS(expr, true);
+      } else {
+        jsCode += exprToJS(expr, false);
+      }
     }
     jsCode += "}\n";
     return jsCode;
   }
 
-  static String primitiveToJS(PrimitiveValueExpression prim) {
+  static String primitiveToJS(PrimitiveValueExpression prim, bool isReturned) {
     PrimitiveValue value = prim.value;
     switch (value) {
       case IntValue _:
-        return "${value.value}";
+        return "${toReturn(isReturned)}${value.value}";
       case FloatValue _:
-        return "${value.value}";
+        return "${toReturn(isReturned)}${value.value}";
       case StringValue _:
-        return "'${value.value}'";
+        return "${toReturn(isReturned)}${value.value}";
       case BoolValue _:
         if (value.value) {
-          return "true";
+          return "${toReturn(isReturned)}true";
         } else {
-          return "false";
+          return "${toReturn(isReturned)}false";
         }
     }
   }
