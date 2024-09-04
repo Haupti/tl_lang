@@ -1,13 +1,10 @@
 
 function fizzbuzz(num){
-if(true){
+if(false){
 return "num"}
 if(false){
 return "no"}
-return null
+throw Error("RUNTIME-ERROR at (1, 34): no condition matched")
 }
 
-console.log(fizzbuzz(2));
-console.log(fizzbuzz(3));
-console.log(fizzbuzz(5));
-console.log(fizzbuzz(15));
+fizzbuzz(1)

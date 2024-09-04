@@ -131,11 +131,20 @@ class FunctionCallExpression implements Expression {
   @override
   TLLType get type => returnType;
 
-  FunctionCallExpression(this.returnType, this.name, this.accessedNames, this.arguments, this.location);
+  FunctionCallExpression(this.returnType, this.name, this.accessedNames,
+      this.arguments, this.location);
 
   @override
   set type(TLLType _) {
     throw Exception("do not call this");
+  }
+
+  String plainName() {
+    if (accessedNames.isEmpty) {
+      return name;
+    } else {
+      return "$name.${accessedNames.join(".")}";
+    }
   }
 }
 

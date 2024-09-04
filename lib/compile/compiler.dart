@@ -1,5 +1,6 @@
 import 'package:tll/compile/compiler_exception.dart';
 import 'package:tll/parse/expression/expression.dart';
+import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 
 class Compiler {
@@ -50,14 +51,13 @@ class Compiler {
   }
 
   static String condToJS(CondExpression cond, bool isReturned) {
-    // TODO check if all possible conditions are matched (maybe do this while parsing and save an 'isExhaustive' flag in the cond expression
     String jsCode = "";
     for (final (cond, res) in cond.condResultPairs) {
       jsCode += "if(${exprToJS(cond, false)}){\n";
       jsCode += "${toReturn(isReturned)}${exprToJS(res, false)}";
       jsCode += "}\n";
     }
-    jsCode += "return null\n";
+    jsCode += runtimeError("no condition matched", cond.location);
     return jsCode;
   }
 
@@ -78,6 +78,10 @@ class Compiler {
   }
 
   static String functionCallToJS(FunctionCallExpression func, bool isReturned) {
+    if(BaseModuleCreator.baseFns[func.plainName] != null){
+      // TODO this might be more difficult than expected
+      return throw Exception("not yet implemented");
+    }
     String accessedFields = func.accessedNames.join(".");
     if (accessedFields != "") {
       accessedFields = ".$accessedFields";
@@ -118,5 +122,9 @@ class Compiler {
           return "${toReturn(isReturned)}false";
         }
     }
+  }
+
+  static String runtimeError(String message, Location location) {
+    return 'throw Error("RUNTIME-ERROR at (${location.row}, ${location.col}): $message")\n';
   }
 }

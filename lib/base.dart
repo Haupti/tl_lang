@@ -4,6 +4,8 @@ import 'package:tll/parse/type/type.dart';
 class Base {
   static final TLLAnonymousSumType _numType =
       TLLAnonymousSumType([TLLIntType(), TLLFloatType()]);
+  static final TLLAnonymousSumType _primitiveType = TLLAnonymousSumType(
+      [TLLStringType(), TLLBoolType(), TLLIntType(), TLLFloatType()]);
   static final SmartMap<TLLType> _baseTypes = SmartMap.init({
     "int": TLLIntType(),
     "float": TLLFloatType(),
@@ -15,6 +17,8 @@ class Base {
     "+": TLLFunctionType(_numType, [_numType, _numType]),
     "-": TLLFunctionType(_numType, [_numType, _numType]),
     "/": TLLFunctionType(_numType, [_numType, _numType]),
+    "=": TLLFunctionType(TLLBoolType(), [_primitiveType, _primitiveType]),
+    "%": TLLFunctionType(_numType, [_numType, _numType]),
   });
 
   static bool has(String name) {
