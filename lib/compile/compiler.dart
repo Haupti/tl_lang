@@ -78,7 +78,7 @@ class Compiler {
   }
 
   static String functionCallToJS(FunctionCallExpression func, bool isReturned) {
-    if(BaseModuleCreator.baseFns[func.plainName] != null){
+    if(baseFunctionsMap[func.name] != null){
       // TODO this might be more difficult than expected
       return throw Exception("not yet implemented");
     }
