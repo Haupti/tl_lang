@@ -1,6 +1,6 @@
 import 'package:tll/parse/expression/builder/utils/token_utils.dart';
 import 'package:tll/parse/expression/expression.dart';
-import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/expression/scope.dart';
 import 'package:tll/parse/parser_exception.dart';

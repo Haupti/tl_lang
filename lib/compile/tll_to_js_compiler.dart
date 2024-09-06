@@ -1,6 +1,6 @@
 import 'package:tll/compile/compiler_exception.dart';
 import 'package:tll/parse/expression/expression.dart';
-import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 
 class TLLtoJSCompiler {

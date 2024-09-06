@@ -1,8 +1,8 @@
 import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
-import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/expression/scope.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';

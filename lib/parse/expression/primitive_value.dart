@@ -1,6 +1,7 @@
 sealed class PrimitiveValue {
   get value;
 }
+
 sealed class NumValue {
   get value;
 }
@@ -18,11 +19,13 @@ class FloatValue implements PrimitiveValue, NumValue {
 }
 
 class StringValue implements PrimitiveValue {
+  @override
   String value;
   StringValue(this.value);
 }
 
 class BoolValue implements PrimitiveValue {
+  @override
   bool value;
   BoolValue(this.value);
 }

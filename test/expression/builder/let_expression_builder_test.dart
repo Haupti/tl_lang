@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/expression/builder/let_expression_builder.dart';
 import 'package:tll/parse/expression/expression.dart';
-import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/expression/scope.dart';
 import 'package:tll/parse/tokenize/token.dart';

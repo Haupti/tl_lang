@@ -1,5 +1,5 @@
 import 'package:tll/parse/collect/token_group.dart';
-import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
 class ParserException implements Exception {

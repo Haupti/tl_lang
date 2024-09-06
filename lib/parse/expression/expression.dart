@@ -1,4 +1,4 @@
-import 'package:tll/parse/expression/location.dart';
+import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/type/type.dart';
 
