@@ -3,7 +3,14 @@ import 'package:tll/parse/collect/collector.dart';
 import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
+import 'package:tll/parse/tokenize/lexer.dart';
+import 'package:tll/parse/tokenize/token.dart';
 import 'package:tll/parse/type/type.dart';
+ 
+
+List<Token> lex(String content) {
+  return Lexer.tokenize(content);
+}
 
 void main() {
   test("builds a struct type", () {
@@ -12,7 +19,7 @@ void main() {
   int age
 )
       """;
-    List<TokenGroup> groups = Collector.findExpressions(code);
+    List<TokenGroup> groups = ExpressionCollector.findExpressions(lex(code));
     List<Expression> expressions = ExpressionBuilder.buildAllTopLevel(groups);
     expect(expressions.length, 1);
     var expression = expressions[0];
@@ -28,7 +35,7 @@ void main() {
 
   test("build function definition expression for correct code", () {
     String code = """(defun (int (int float)) (times-two a) (* a 2))""";
-    List<TokenGroup> groups = Collector.findExpressions(code);
+    List<TokenGroup> groups = ExpressionCollector.findExpressions(lex(code));
     List<Expression> expressions = ExpressionBuilder.buildAllTopLevel(groups);
     expect(expressions.length, 1);
     var expression = expressions[0];

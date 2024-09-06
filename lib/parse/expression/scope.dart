@@ -1,4 +1,4 @@
-import 'package:tll/base.dart';
+import 'package:tll/core/core.dart';
 import 'package:tll/parse/expression/expression_container.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
@@ -25,7 +25,7 @@ class ModuleScopeContext implements ScopeContext {
         !variables.has(name) &&
         !functions.has(name) &&
         !types.has(name) &&
-        !Base.has(name);
+        !Core.has(name);
   }
 
   @override
@@ -51,7 +51,7 @@ class ModuleScopeContext implements ScopeContext {
     return constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.getTypeOf(name);
+        Core.getTypeOf(name);
   }
 
   @override
@@ -65,7 +65,7 @@ class ModuleScopeContext implements ScopeContext {
 
   @override
   TLLType? findType(String name) {
-    return Base.getType(name) ?? types.get(name);
+    return Core.getType(name) ?? types.get(name);
   }
 
   @override
@@ -94,7 +94,7 @@ class FunctionScopeContext implements ScopeContext {
         !variables.has(name) &&
         !functions.has(name) &&
         !types.has(name) &&
-        !Base.has(name) &&
+        !Core.has(name) &&
         parentScope.findType(name) == null;
   }
 
@@ -122,7 +122,7 @@ class FunctionScopeContext implements ScopeContext {
         constants.get(name) ??
         variables.get(name) ??
         functions.get(name) ??
-        Base.getTypeOf(name) ??
+        Core.getTypeOf(name) ??
         parentScope.getTypeOf(name);
   }
 
@@ -147,7 +147,7 @@ class FunctionScopeContext implements ScopeContext {
 
   @override
   TLLType? findType(String name) {
-    return Base.getType(name) ?? types.get(name) ?? parentScope.findType(name);
+    return Core.getType(name) ?? types.get(name) ?? parentScope.findType(name);
   }
 
   void addParam(NameToken argumentName, TLLType argumentType) {

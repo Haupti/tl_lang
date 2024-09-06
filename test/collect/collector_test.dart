@@ -1,13 +1,18 @@
 import 'package:test/test.dart';
 import 'package:tll/parse/collect/collector.dart';
 import 'package:tll/parse/collect/token_group.dart';
-
+import 'package:tll/parse/tokenize/lexer.dart';
+import 'package:tll/parse/tokenize/token.dart';
 import '../testutils/token_group_extensions.dart';
+
+List<Token> lex(String content) {
+  return Lexer.tokenize(content);
+}
 
 void main() {
   test('finds groups', () {
     List<ExpressionTokenGroup> expressions =
-        Collector.findExpressions("(let int a 1)");
+        ExpressionCollector.findExpressions(lex("(let int a 1)"));
     expect(expressions.length, 1);
     ExpressionTokenGroup expr = expressions[0];
 
@@ -42,7 +47,7 @@ void main() {
   });
   test('finds groups with nested expression', () {
     List<ExpressionTokenGroup> expressions =
-        Collector.findExpressions("(let int b\n(+ 1 2))");
+        ExpressionCollector.findExpressions(lex("(let int b\n(+ 1 2))"));
     expect(expressions.length, 1);
     ExpressionTokenGroup expr = expressions[0];
 
@@ -92,8 +97,9 @@ void main() {
     expect(trdsnd.token.col, 5);
   });
   test('finds groups with nested expressions and multiple expression', () {
-    List<ExpressionTokenGroup> expressions = Collector.findExpressions(
-        "(let int a (+ 1 2))\n(defun (int int string) (dosomestuff a b) (str (+ a b)))");
+    List<ExpressionTokenGroup> expressions =
+        ExpressionCollector.findExpressions(lex(
+            "(let int a (+ 1 2))\n(defun (int int string) (dosomestuff a b) (str (+ a b)))"));
     expect(expressions.map((it) => it.show()).toList(), [
       "(keyword:let name:int name:a (name:+ int:1 int:2))",
       "(keyword:defun (name:int name:int name:string) (name:dosomestuff name:a name:b) (name:str (name:+ name:a name:b)))"

@@ -1,6 +1,6 @@
 import 'package:tll/parse/expression/primitive_value.dart';
 
-class BaseFunctionCreator {
+class CoreFunctionCreator {
   static String plus(NumValue valA, NumValue valB) {
     return "${valA.value} + ${valB.value}";
   }

@@ -1,8 +1,8 @@
-import 'package:tll/base/base_fns.dart';
+import 'package:tll/core/core_fns.dart';
 import 'package:tll/parse/expression/expression_container.dart';
 import 'package:tll/parse/type/type.dart';
 
-class Base {
+class Core {
   static final SmartMap<TLLType> _baseTypes = SmartMap.init({
     "int": TLLIntType(),
     "float": TLLFloatType(),
@@ -24,19 +24,19 @@ class Base {
 
   static SmartMap<TLLType> _initBaseFunctions() {
     SmartMap<TLLType> baseFunctionsMap = SmartMap();
-    for (final fn in baseFunctions) {
+    for (final fn in coreFunctions) {
       switch (fn) {
-        case PlusBaseFunction _:
+        case PlusCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
-        case MinusBaseFunction _:
+        case MinusCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
-        case TimesBaseFunction _:
+        case TimesCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
-        case DividedBaseFunction _:
+        case DividedCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
-        case ModuloBaseFunction _:
+        case ModuloCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
-        case EqualsBaseFunction _:
+        case EqualsCoreFunction _:
           baseFunctionsMap.add(fn.name, fn.type);
       }
     }

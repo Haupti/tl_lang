@@ -3,7 +3,7 @@ import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 
-class Compiler {
+class TLLtoJSCompiler {
   static String toJS(List<Expression> expressions) {
     String jsCode = "";
     for (int i = 0; i < expressions.length; i++) {

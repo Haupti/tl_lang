@@ -1,4 +1,4 @@
-import 'package:tll/compile/base/base_module_creator.dart';
+import 'package:tll/compile/core/core_functions_creator.dart';
 import 'package:tll/parse/type/type.dart';
 
 final TLLAnonymousSumType numType =
@@ -6,69 +6,69 @@ final TLLAnonymousSumType numType =
 final TLLAnonymousSumType primitiveType = TLLAnonymousSumType(
     [TLLStringType(), TLLBoolType(), TLLIntType(), TLLFloatType()]);
 
-List<BaseFunction> baseFunctions = [
-  PlusBaseFunction(),
-  MinusBaseFunction(),
-  TimesBaseFunction(),
-  DividedBaseFunction(),
-  ModuloBaseFunction(),
-  EqualsBaseFunction()
+List<CoreFunction> coreFunctions = [
+  PlusCoreFunction(),
+  MinusCoreFunction(),
+  TimesCoreFunction(),
+  DividedCoreFunction(),
+  ModuloCoreFunction(),
+  EqualsCoreFunction()
 ];
 
-sealed class BaseFunction {
+sealed class CoreFunction {
   String get name;
   TLLType get type;
   Function get compile;
 }
 
-class PlusBaseFunction implements BaseFunction {
+class PlusCoreFunction implements CoreFunction {
   @override
-  Function compile = BaseFunctionCreator.plus;
+  Function compile = CoreFunctionCreator.plus;
   @override
   String name = "+";
   @override
   TLLType type = TLLFunctionType(numType, [numType, numType]);
 }
 
-class MinusBaseFunction implements BaseFunction {
+class MinusCoreFunction implements CoreFunction {
   @override
-  Function compile = BaseFunctionCreator.minus;
+  Function compile = CoreFunctionCreator.minus;
   @override
   String name = "-";
   @override
   TLLType type = TLLFunctionType(numType, [numType, numType]);
 }
 
-class TimesBaseFunction implements BaseFunction {
+class TimesCoreFunction implements CoreFunction {
   @override
-  Function compile = BaseFunctionCreator.times;
+  Function compile = CoreFunctionCreator.times;
   @override
   String name = "*";
   @override
   TLLType type = TLLFunctionType(numType, [numType, numType]);
 }
 
-class DividedBaseFunction implements BaseFunction {
+class DividedCoreFunction implements CoreFunction {
   @override
-  Function compile = BaseFunctionCreator.divided;
-  @override
-  String name = "/";
-  @override
-  TLLType type = TLLFunctionType(numType, [numType, numType]);
-}
-
-class ModuloBaseFunction implements BaseFunction {
-  @override
-  Function compile = BaseFunctionCreator.modulo;
+  Function compile = CoreFunctionCreator.divided;
   @override
   String name = "/";
   @override
   TLLType type = TLLFunctionType(numType, [numType, numType]);
 }
 
-class EqualsBaseFunction implements BaseFunction {
+class ModuloCoreFunction implements CoreFunction {
   @override
-  Function compile = BaseFunctionCreator.equalsJS;
+  Function compile = CoreFunctionCreator.modulo;
+  @override
+  String name = "%";
+  @override
+  TLLType type = TLLFunctionType(numType, [numType, numType]);
+}
+
+class EqualsCoreFunction implements CoreFunction {
+  @override
+  Function compile = CoreFunctionCreator.equalsJS;
   @override
   String name = "=";
   @override

@@ -1,9 +1,8 @@
 import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/parser_exception.dart';
-import 'package:tll/parse/tokenize/lexer.dart';
 import 'package:tll/parse/tokenize/token.dart';
 
-class Collector {
+class ExpressionCollector {
   static List<Token> _findInnerTokens(List<Token> expressionTokens) {
     List<Token> trimmedExpressionTokens = expressionTokens.sublist(1);
     trimmedExpressionTokens.removeLast();
@@ -136,8 +135,7 @@ class Collector {
     }
   }
 
-  static List<ExpressionTokenGroup> findExpressions(String code) {
-    List<Token> tokens = Lexer.tokenize(code);
+  static List<ExpressionTokenGroup> findExpressions(List<Token> tokens) {
     return _findExpressions(tokens);
   }
 }
