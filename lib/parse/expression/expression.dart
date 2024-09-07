@@ -1,6 +1,6 @@
 import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 sealed class Expression {
   TLLType type;

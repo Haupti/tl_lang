@@ -5,7 +5,7 @@ import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/expression/expression_builder.dart';
 import 'package:tll/parse/tokenize/lexer.dart';
 import 'package:tll/parse/tokenize/token.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
  
 
 List<Token> lex(String content) {

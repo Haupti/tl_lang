@@ -6,7 +6,7 @@ import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 import 'package:tll/parse/expression/scope.dart';
 import 'package:tll/parse/tokenize/token.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 import '../../testutils/single_token_builder.dart';
 
 void main() {

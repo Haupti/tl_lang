@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:test/test.dart';
-import 'package:tll/parse/type/type.dart';
-import 'package:tll/parse/type/type_checker.dart';
+import 'package:tll/type/type.dart';
+import 'package:tll/type/type_checker.dart';
 
 check(TLLType a, TLLType b) => TypeChecker.typeASufficesB(a, b);
 

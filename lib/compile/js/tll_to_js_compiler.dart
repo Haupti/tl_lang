@@ -1,9 +1,10 @@
 import 'package:tll/compile/compiler_exception.dart';
+import 'package:tll/compile/compiler_interface.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/location.dart';
 import 'package:tll/parse/expression/primitive_value.dart';
 
-class TLLtoJSCompiler {
+class TLLtoJSCompiler implements CompilerInterface {
   static String toJS(List<Expression> expressions) {
     String jsCode = "";
     for (int i = 0; i < expressions.length; i++) {
@@ -78,10 +79,7 @@ class TLLtoJSCompiler {
   }
 
   static String functionCallToJS(FunctionCallExpression func, bool isReturned) {
-    if(baseFunctionsMap[func.name] != null){
-      // TODO this might be more difficult than expected
-      return throw Exception("not yet implemented");
-    }
+    return throw Exception("not yet implemented");
     String accessedFields = func.accessedNames.join(".");
     if (accessedFields != "") {
       accessedFields = ".$accessedFields";

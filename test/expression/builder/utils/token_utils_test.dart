@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:tll/parse/expression/builder/utils/token_utils.dart';
 import 'package:tll/parse/expression/scope.dart';
 import 'package:tll/parse/tokenize/token.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 void main() {
   test("type of accessed object (1d)", () {

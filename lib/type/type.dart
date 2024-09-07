@@ -1,4 +1,4 @@
-import 'package:tll/parse/type/type_checker.dart';
+import 'package:tll/type/type_checker.dart';
 
 sealed class TLLType {
 

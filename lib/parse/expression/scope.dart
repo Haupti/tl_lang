@@ -1,8 +1,8 @@
-import 'package:tll/core/core.dart';
+import 'package:tll/parse/core/core.dart';
 import 'package:tll/parse/expression/expression_container.dart';
 import 'package:tll/parse/parser_exception.dart';
 import 'package:tll/parse/tokenize/token.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 sealed class ScopeContext {
   TLLType? getTypeOf(String name);

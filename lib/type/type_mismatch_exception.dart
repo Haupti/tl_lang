@@ -1,7 +1,7 @@
 import 'package:tll/parse/collect/token_group.dart';
 import 'package:tll/parse/location.dart';
 import 'package:tll/parse/tokenize/token.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 class TLLTypeError implements Exception {
   String message;

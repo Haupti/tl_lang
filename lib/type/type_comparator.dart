@@ -1,4 +1,4 @@
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 class TypeComparator {
   static bool structTypeEquals(TLLStructType typeA, TLLStructType typeB) {

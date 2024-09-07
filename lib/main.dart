@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:tll/compile/compiler.dart';
+import 'package:tll/compile/js/tll_to_js_compiler.dart';
 import 'package:tll/parse/expression/expression.dart';
 import 'package:tll/parse/parser.dart';
 

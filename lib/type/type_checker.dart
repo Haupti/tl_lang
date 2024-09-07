@@ -1,30 +1,8 @@
-import 'package:tll/parse/type/type.dart';
-import 'package:tll/parse/type/type_comparator.dart';
+import 'package:tll/type/type.dart';
+import 'package:tll/type/type_comparator.dart';
 
 class TypeChecker {
   static bool typeASufficesB(TLLType typeA, TLLType typeB) {
-    /*
-       when does what suffice:
-         X exact matches always suffice
-         _ value types suffice their corresponding general type BUT NOT VICE VERSA
-         _ value types suffice sum types that contain at least one type which they suffice
-         _ sum types suffice other sum types if all their possible options are in the others possible options OR suffice them:
-            e.g. : (type "hi" int "mom") suffices (type string int) and (type "hi" "mom" "dad" int)
-         _ struct types only suffice on excat match
-         _ function types suffice if their arguments are equal or more general and their return type is equal or more specific than the others 
-         e.g.:
-         expect: (int) -> 1 | 2 | 3
-         get: (1| 2| 3) -> int
-           => fails because not every int can be put in expect fn
-         e.g.:
-         expect: (int) -> 1 | 2 | 3
-         get: (int) -> 1 | 2
-           => success because return type is more specific 
-         e.g.:
-         expect: (1 | 2 | 3) -> 1 | 2 | 3
-         get: (int) -> 1 | 2
-           => success because return type is more specific and arguments are more general
-       */
     switch (typeA) {
       case TLLBoolType _:
         return typeB is TLLBoolType || _typeASufficeSumTypeB(typeA, typeB);

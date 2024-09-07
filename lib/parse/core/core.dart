@@ -1,6 +1,6 @@
 import 'package:tll/core/core_fns.dart';
 import 'package:tll/parse/expression/expression_container.dart';
-import 'package:tll/parse/type/type.dart';
+import 'package:tll/type/type.dart';
 
 class Core {
   static final SmartMap<TLLType> _baseTypes = SmartMap.init({
